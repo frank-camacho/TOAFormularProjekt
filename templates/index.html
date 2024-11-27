@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Consulta los datos por correo electrónico">
+    <title>TOA Reparaturanfrage</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>E-Mail Anfrage</h1>
+    <form action="/procesar_correo" method="POST">
+        <label for="correo">E-Mail:</label>
+        <input type="email" id="correo" name="correo" required>
+        <button type="submit">Anfrage</button>
+    </form>
+</body>
+</html>
