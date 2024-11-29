@@ -8,11 +8,10 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>E-Mail Anfrage</h1>
-    <form action="/procesar_correo" method="POST">
-        <label for="correo">E-Mail:</label>
-        <input type="email" id="correo" name="correo" required>
-        <button type="submit">Anfrage</button>
-    </form>
+    <h1>Bienvenido al Portal de TOA</h1>
+    <div>
+        <p>¿No tienes cuenta aún? <a href="/register">Regístrate aquí</a></p>
+        <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a></p>
+    </div>
 </body>
 </html>
