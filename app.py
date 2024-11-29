@@ -31,10 +31,12 @@ def login():
         username = request.form['username']
         password = request.form['password']
         
-        user = usuarios.obtener_usuario(username)  # Supongamos que tenemos una función para obtener el usuario
-        if user and user['password'] == password:
-            session['user_id'] = user['id']
-            session['role'] = user['role']
+        # Pasar ambos argumentos (username y password) a la función obtener_usuario
+        user = usuarios.obtener_usuario(username, password)
+        
+        if user:
+            session['user_id'] = user[0]  # Asumiendo que el ID está en la primera columna
+            session['role'] = user[3]    # Asumiendo que el rol está en la cuarta columna
             return redirect('/consulta')  # Redirige a la página de consulta
         else:
             return "Usuario o contraseña incorrectos"
@@ -43,23 +45,28 @@ def login():
 # Ruta para la consulta de datos
 @app.route('/consulta', methods=['GET', 'POST'])
 def consulta():
-    if 'user_id' not in session or session['role'] == 'empleado':
-        return redirect('/login')  # Si no hay sesión o el usuario es empleado, redirige al login
+    if 'user_id' not in session:
+        return redirect('/login')  # Redirige si no hay sesión activa
+
+    is_empleado = session.get('role') == 'empleado'
+    username = session.get('user_id')  # Obtén el nombre o ID del usuario
 
     if request.method == 'POST':
-        correo = request.form['correo']
+        correo = request.form['correo']  # Obtén el correo del formulario
         archivo_excel = os.path.join(os.path.dirname(__file__), 'reparaturen.xlsx')
         resultados = filtrar_datos_por_correo(archivo_excel, correo)
-        
-        if resultados.empty:
-            return render_template('consulta.html', mensaje="No se encontraron resultados para ese correo.")
-        
-        columnas = resultados.columns.tolist()
-        resultados_dict = resultados.to_dict(orient='records')
-        
-        return render_template('consulta.html', resultados=resultados_dict, columnas=columnas)
 
-    return render_template('consulta.html')
+        if resultados.empty:
+            # Si no hay resultados, regresa a consulta.html con un mensaje
+            return render_template('consulta.html', mensaje="Keine Ergebnisse gefunden.", is_empleado=is_empleado, username=username)
+
+        # Si hay resultados, pasa los datos a tabla.html
+        columnas = resultados.columns.tolist()  # Obtén las columnas del DataFrame
+        resultados_dict = resultados.to_dict(orient='records')  # Convierte los datos a lista de diccionarios
+        return render_template('tabla.html', resultados=resultados_dict, columnas=columnas)
+
+    # Si es una solicitud GET, carga consulta.html
+    return render_template('consulta.html', is_empleado=is_empleado, username=username)
 
 # Función que lee el archivo Excel por fragmentos y filtra por correo
 def filtrar_datos_por_correo(archivo_excel, correo):

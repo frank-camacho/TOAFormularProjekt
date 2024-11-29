@@ -10,7 +10,7 @@
     <h1>Consulta de Datos</h1>
     {% if not is_empleado %}
     <p>Bienvenido, {{ username }}. Aquí puedes consultar los datos registrados.</p>
-    <form action="/procesar_correo" method="POST">
+    <form action="/consulta" method="POST">
         <label for="correo">E-Mail:</label>
         <input type="email" id="correo" name="correo" required>
         <button type="submit">Buscar</button>
