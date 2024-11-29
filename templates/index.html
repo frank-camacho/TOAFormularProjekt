@@ -8,10 +8,34 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Bienvenido al Portal de TOA</h1>
+    <h1>TOA Reparaturanfrage Portal</h1>
     <div>
-        <p>¿No tienes cuenta aún? <a href="/register">Regístrate aquí</a></p>
-        <p>¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a></p>
+        
+        <!-- Tabla para mostrar las opciones -->
+        <table class="opciones-tabla">
+            <tbody>
+                <tr>
+                    <td>Melde Sich</td>
+                    <td></td>
+                    <td style="text-align: right;"><a href="/login">Login</a></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Kein Konto?</td>
+                    <td></td>
+                    <td style="text-align: right;"><a href="/register">Neu Konto</a></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

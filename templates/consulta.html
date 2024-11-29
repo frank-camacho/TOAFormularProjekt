@@ -8,18 +8,24 @@
 </head>
 <body>
     <h1>Consulta de Datos</h1>
-    {% if not is_empleado %}
-    <p>Bienvenido, {{ username }}. Aquí puedes consultar los datos registrados.</p>
+    
+    <div class="mensaje-bienvenida">
+        {% if not is_empleado %}
+            <p>Bienvenido, {{ username }}. </p>
+            <p> (cliente)</p>
+        {% else %}
+            <p>Bienvenido, {{ username }}. empleado!</p>
+            <div id="editable-records">
+                <!-- Aquí aparecerán los registros que los empleados pueden editar con AJAX -->
+            </div>
+        {% endif %}
+        <p>{{ ya }}</p>
+    </div>
+    
     <form action="/consulta" method="POST">
-        <label for="correo">E-Mail:</label>
-        <input type="email" id="correo" name="correo" required>
+        <input type="email" placeholder="E-Mail" id="correo" name="correo" required>
         <button type="submit">Buscar</button>
     </form>
-    {% else %}
-    <p>Bienvenido, {{ username }}. Eres un empleado y puedes editar los registros.</p>
-    <div id="editable-records">
-        <!-- Aquí aparecerán los registros que los empleados pueden editar con AJAX -->
-    </div>
-    {% endif %}
+
 </body>
 </html>

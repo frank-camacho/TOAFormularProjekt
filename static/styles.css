@@ -1,8 +1,7 @@
-/* Estilos generales */
 body {
     font-family: Arial, sans-serif;
     font-size: 12px;
-    margin: 5px;
+    margin: 0px;
     background-color: #f4f4f9;
 }
 
@@ -15,10 +14,10 @@ h1 {
 form {
     font-size: 12px;
     background-color: #fff;
-    padding: 5px;
+    padding: 30px;
     border-radius: 5px;
-    box-shadow: 1 1 1px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
+    box-shadow: 30 30 30px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
     margin: auto;
 }
 
@@ -27,81 +26,119 @@ label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    margin: auto;
 }
 
-input[type="email"] {
+input{
     font-size: 12px;
-    width: 100%;
+    width: 20%;
     padding: 5px;
+    margin: auto;
     margin-bottom: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+
+    display: flex;
+    align-items: flex-end;
+    align-content: flex-end;
+    justify-content: flex-end;
+    text-align: left;
+    flex-direction: row;
+
+    border: none;
+    border-bottom: 1px solid #3f3f3f;
+    border-radius: 0px;
+}
+input::placeholder{
+    color:#5daf6a;
+    opacity: 30%;
 }
 
 button {
     font-size: 12px;
-    width: 100%;
-    padding: 5px;
+    padding: 10px;
     background-color: #4CAF50;
     color: white;
+
     border: none;
+    border-bottom: 2px solid #3f3f3f;
+    border-left: 2px solid #3f3f3f;
+    border-top: 1px solid #3f3f3f;
+    border-right: 1px solid #3f3f3f;
     border-radius: 5px;
-    cursor: pointer;
+
+    margin: auto;
+    display: flex;
+    align-items: flex-end;
+    align-content: flex-end;
+    justify-content: flex-end;
+    text-align: left;
+    flex-direction: row;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
-/* Estilos para la tabla */
+.mensaje-bienvenida {
+    display: flex;
+    align-items: flex-end;
+    align-content: flex-end;
+    justify-content: flex-end;
+    text-align: left;
+    flex-direction: row;
+    margin: 10px;
+}
+
+.mensaje-bienvenida p {
+    font-size: 10px;
+    color: #10801f;
+    font-weight: bold;
+}
+
 table {
     font-size: 12px;
-    width: 100%;
+    width: auto;
+    max-width: 600px;
+    margin: 5px auto;
     border-collapse: collapse;
-    margin-top: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
     font-size: 12px;
-    padding: 5px;
+    padding: 2px;
     text-align: left;
-    border-bottom: 5px solid #ddd;
+    border-bottom: 2px solid #ddd;
 }
 
 th {
     background-color: #4CAF50;
     color: white;
-    font-size: 12px;
+    font-weight: bold;
 }
 
 tr:hover {
-    background-color: #1eda2e7a;
+    background-color: #f1f1f1;
 }
 
-.dataTables_wrapper {
-    margin-top: 5px;
-}
-
-.dataTables_filter label {
-    font-size: 12px;
-    color: #333;
-}
-
-.dataTables_length select {
-    width: auto;
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.dataTables_paginate a {
-    padding: 1px 1px;
-    margin: 1 1x;
-    background-color: #4CAF50;
-    color: white;
-    border-radius: 1px;
+a {
+    color: #007bff;
     text-decoration: none;
 }
 
-.dataTables_paginate a:hover {
-    background-color: #45a049;
+a:hover {
+    text-decoration: underline;
+}
+
+.dataTables_wrapper {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.dataTables_filter {
+    margin-bottom: 5px;
+}
+
+.dataTables_length, .dataTables_filter {
+    font-size: 12px;
 }
