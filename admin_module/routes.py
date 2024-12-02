@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, session
+from flask import render_template, request, redirect, session, flash
 from datetime import date
 import os
 import pandas as pd
@@ -16,10 +16,13 @@ def register_routes(app):
             username = request.form['username']
             password = request.form['password']
             role = request.form['role']
+
             if registrar_usuario(username, password, role):
-                return "Usuario registrado exitosamente."
+                flash("Usuario registrado exitosamente.", "success")  # Mensaje de éxito
+                return redirect('/register')  # Redirige al formulario
             else:
-                return "Error: El usuario ya existe."
+                flash("Error: El usuario ya existe.", "error")  # Mensaje de error
+                return redirect('/register')  # Redirige al formulario
         return render_template('register.html')
 
     @app.route('/login', methods=['GET', 'POST'])
