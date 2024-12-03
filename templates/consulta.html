@@ -9,23 +9,15 @@
 <body>
     <h1>Daten Abrufen</h1>
     
-    <div class="mensaje-bienvenida">
-        {% if not is_empleado %}
-            <p>Bienvenido, {{ username }}. </p>
-            <p> (cliente)</p>
-        {% else %}
-            <p>Bienvenido, {{ username }}. empleado!</p>
-            <div id="editable-records">
-                <!-- Aquí aparecerán los registros que los empleados pueden editar con AJAX -->
-            </div>
-        {% endif %}
-        <p>{{ ya }}</p>
-    </div>
-    
     <form action="/consulta" method="POST">
-        <input type="email" placeholder="E-Mail" id="correo" name="correo" required>
+        <label for="correo">E-Mail:</label>
+        <input type="email" placeholder="E-Mail eingeben" id="correo" name="correo" required>
         <button type="submit">Daten Abrufen</button>
     </form>
 
+    <!-- Mensaje de error si no se encuentran resultados -->
+    {% if mensaje %}
+        <p>{{ mensaje }}</p>
+    {% endif %}
 </body>
 </html>
