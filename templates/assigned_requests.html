@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Bearbeitete Bestellungen</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Bearbeitete Bestellungen</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Produkt</th>
+                <th>Mitarbeiter</th>
+                <th>Status</th>
+                <th>Datum</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in requests %}
+                <tr>
+                    <td>{{ request.id }}</td>
+                    <td>{{ request.product }}</td>
+                    <td>{{ request.employee }}</td>
+                    <td>{{ request.status }}</td>
+                    <td>{{ request.date }}</td>
+                    <td>
+                        <form action="/update_status" method="POST">
+                            <input type="hidden" name="id" value="{{ request.id }}">
+                            <select name="status">
+                                <option value="En Proceso">En Proceso</option>
+                                <option value="Completado">Completado</option>
+                            </select>
+                            <button type="submit">Aktualisieren</button>
+                        </form>
+                    </td>
+                    <td>
+                        <a href="/edit_data/{{ request['id'] }}">
+                            <button type="button">Bearbeiten</button>
+                        </a>
+                    </td>                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

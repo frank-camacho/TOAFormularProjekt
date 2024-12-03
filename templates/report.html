@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>RMA-Berichte</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>RMA-Berichte</h1>
+    <p>Zusammenfassung der aktuellen RMA-Aktivitäten:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Anzahl</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for status, count in report_data.items() %}
+                <tr>
+                    <td>{{ status }}</td>
+                    <td>{{ count }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div>
+        <a href="/employee_dashboard">
+            <button type="button">Zurück zum Mitarbeiterportal</button>
+        </a>
+    </div>
+</body>
+</html>

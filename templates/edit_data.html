@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>RMA-Daten bearbeiten</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>RMA-Daten bearbeiten</h1>
+    <form action="/edit_data/{{ rma_id }}" method="POST">
+        {% for field in fields %}
+            {% if field.type == 'textarea' %}
+                <textarea name="{{ field.name }}" placeholder="{{ field.placeholder }}" rows="5" {% if field.required %}required{% endif %}>
+                    {{ rma_data[field.name] }}
+                </textarea><br>
+            {% elif field.type == 'select' %}
+                <select name="{{ field.name }}" {% if field.required %}required{% endif %}>
+                    {% for option in field.options %}
+                        <option value="{{ option }}" {% if rma_data[field.name] == option %}selected{% endif %}>
+                            {{ option }}
+                        </option>
+                    {% endfor %}
+                </select><br>
+            {% else %}
+                <input type="{{ field.type }}" name="{{ field.name }}" placeholder="{{ field.placeholder }}" 
+                       value="{{ rma_data[field.name] }}" {% if field.required %}required{% endif %}
+                       {% if field.step %}step="{{ field.step }}"{% endif %}><br>
+            {% endif %}
+        {% endfor %}
+        <button type="submit">Änderungen speichern</button>
+    </form>
+</body>
+</html>

@@ -1,3 +1,4 @@
+/* General */
 body {
     font-family: Arial, sans-serif;
     font-size: 12px;
@@ -6,17 +7,18 @@ body {
 }
 
 h1 {
-    font-size: 20;
+    font-size: 20px;
     color: #333;
     text-align: center;
 }
 
+/* Formularios */
 form {
     font-size: 12px;
     background-color: #fff;
     padding: 30px;
     border-radius: 5px;
-    box-shadow: 30 30 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     max-width: 100%;
     margin: auto;
 }
@@ -29,7 +31,7 @@ label {
     margin: auto;
 }
 
-input{
+input {
     font-size: 12px;
     width: 20%;
     padding: 5px;
@@ -38,20 +40,18 @@ input{
 
     display: flex;
     align-items: flex-end;
-    align-content: flex-end;
     justify-content: flex-end;
-    text-align: left;
-    flex-direction: row;
-
     border: none;
     border-bottom: 1px solid #3f3f3f;
     border-radius: 0px;
 }
-input::placeholder{
-    color:#5daf6a;
+
+input::placeholder {
+    color: #5daf6a;
     opacity: 30%;
 }
 
+/* Botones */
 button {
     font-size: 12px;
     padding: 10px;
@@ -68,23 +68,37 @@ button {
     margin: auto;
     display: flex;
     align-items: flex-end;
-    align-content: flex-end;
     justify-content: flex-end;
-    text-align: left;
-    flex-direction: row;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
+/* Botón para nueva búsqueda */
+.back-button {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.back-button button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.back-button button:hover {
+    background-color: #45a049;
+}
+
+/* Mensajes */
 .mensaje-bienvenida {
     display: flex;
     align-items: flex-end;
-    align-content: flex-end;
     justify-content: flex-end;
-    text-align: left;
-    flex-direction: row;
     margin: 10px;
 }
 
@@ -94,6 +108,7 @@ button:hover {
     font-weight: bold;
 }
 
+/* Tablas */
 table {
     font-size: 12px;
     width: auto;
@@ -115,12 +130,44 @@ th {
     background-color: #4CAF50;
     color: white;
     font-weight: bold;
+    cursor: pointer;
 }
 
 tr:hover {
     background-color: #f1f1f1;
 }
 
+/* Controles de la tabla */
+.table-controls {
+    margin-bottom: 1em;
+    text-align: center;
+}
+
+/* Paginación */
+.pagination {
+    margin-top: 1em;
+    text-align: center;
+}
+
+.pagination button {
+    margin: 0 2px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #f2f2f2;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    background-color: #ddd;
+}
+
+.pagination button.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Enlaces */
 a {
     color: #007bff;
     text-decoration: none;
@@ -130,6 +177,7 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Compatibilidad con DataTables */
 .dataTables_wrapper {
     width: 80%;
     margin: 0 auto;

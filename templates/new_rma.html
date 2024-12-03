@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Neues RMA Erstellen</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Neues RMA Erstellen</h1>
+
+    <form action="/new_rma" method="POST">
+        <label for="product">Produkt</label>
+        <input type="text" id="product" name="product" placeholder="Produktname" required>
+
+        <label for="serial_number">Seriennummer</label>
+        <input type="text" id="serial_number" name="serial_number" placeholder="Seriennummer" required>
+
+        <label for="customer">Kunde</label>
+        <input type="text" id="customer" name="customer" placeholder="Kundenname" required>
+
+        <label for="issue_description">Fehlerbeschreibung</label>
+        <textarea id="issue_description" name="issue_description" placeholder="Beschreiben Sie den Fehler" required></textarea>
+
+        <button type="submit">RMA Erstellen</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>RMA Management - Mitarbeiter</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Willkommen im Mitarbeiter-Portal</h1>
+    <p>Wählen Sie eine Aktion aus:</p>
+
+    <div>
+        <a href="/new_requests">
+            <button type="button">Neue Bestellungen ansehen</button>
+        </a>
+    </div>
+    <div>
+        <a href="/assigned_requests">
+            <button type="button">Bearbeitete Bestellungen ansehen</button>
+        </a>
+    </div>
+    <div>
+        <a href="/new_rma">
+            <button type="button">Neues RMA erstellen</button>
+        </a>
+    </div>
+    <div>
+        <a href="/report">
+            <button type="button">Bericht generieren</button>
+        </a>
+    </div>
+    <div>
+        <a href="/new_repair">
+            <button type="button">Neue Reparatur registrieren</button>
+        </a>
+    </div>
+
+    <!-- Sección para visualizar reparaciones existentes -->
+    <h2>Übersicht über Reparaturen</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Produkt</th>
+                <th>Kunde</th>
+                <th>Status</th>
+                <th>Werkstatt</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in requests %}
+            <tr>
+                <td>{{ request.id }}</td>
+                <td>{{ request.modell }}</td>
+                <td>{{ request.name }}</td>
+                <td>{{ request.status }}</td>
+                <td>{{ request.assigned_taller }}</td>
+                <td>
+                    <form action="/update_status" method="POST">
+                        <input type="hidden" name="id" value="{{ request.id }}">
+                        <select name="status">
+                            <option value="Neu" {% if request.status == "Neu" %}selected{% endif %}>Neu</option>
+                            <option value="In Arbeit" {% if request.status == "In Arbeit" %}selected{% endif %}>In Arbeit</option>
+                            <option value="Abgeschlossen" {% if request.status == "Abgeschlossen" %}selected{% endif %}>Abgeschlossen</option>
+                        </select>
+                        <button type="submit">Aktualisieren</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

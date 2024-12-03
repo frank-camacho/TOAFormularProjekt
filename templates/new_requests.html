@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Neue Bestellungen</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Neue Bestellungen</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Produkt</th>
+                <th>Kunde</th>
+                <th>Status</th>
+                <th>Datum</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in requests %}
+                <tr>
+                    <td>{{ request.id }}</td>
+                    <td>{{ request.product }}</td>
+                    <td>{{ request.customer }}</td>
+                    <td>{{ request.status }}</td>
+                    <td>{{ request.date }}</td>
+                    <td>
+                        <form action="/assign_request" method="POST">
+                            <input type="hidden" name="id" value="{{ request.id }}">
+                            <button type="submit">Zuweisen</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

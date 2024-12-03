@@ -4,12 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ergebnisse</title>
-    <!-- Incluir el archivo de estilos CSS personalizado -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    
-    <!-- Incluir la librería DataTables para estilos -->
-    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
     <h1>Ergebnisse</h1>
@@ -17,33 +12,37 @@
     {% if mensaje %}
         <p>{{ mensaje }}</p>
     {% else %}
-        <table id="tabla_resultados" class="display">
+        <div class="table-controls">
+            <input type="text" id="searchInput" placeholder="Suchen...">
+        </div>
+        <table id="tabla_resultados">
             <thead>
                 <tr>
-                    <!-- Generar dinámicamente las cabeceras de la tabla -->
                     {% for columna in columnas %}
-                        <th>{{ columna }}</th>
+                        <th onclick="sortTable({{ loop.index0 }})">{{ columna }}</th>
                     {% endfor %}
                 </tr>
             </thead>
             <tbody>
-                <!-- Generar las filas dinámicamente -->
                 {% for fila in resultados %}
                     <tr>
-                        {% for columna in columnas %}
-                            <td>{{ fila[columna] }}</td>
+                        {% for valor in fila %}
+                            <td>{{ valor }}</td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        <div class="pagination" id="pagination"></div>
     {% endif %}
 
-    <!-- Inicializar la tabla DataTables -->
-    <script>
-        $(document).ready(function() {
-            $('#tabla_resultados').DataTable();  // Activar los filtros y ordenamiento
-        });
-    </script>
+    <div class="back-button">
+        <a href="/consulta">
+            <button type="button">Neue Suche</button>
+        </a>
+    </div>
+
+    <!-- Cargar el archivo JavaScript -->
+    <script src="{{ url_for('static', filename='table_controls.js') }}"></script>
 </body>
 </html>
