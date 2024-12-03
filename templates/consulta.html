@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Consulta de Datos</h1>
+    <h1>Daten Abrufen</h1>
     
     <div class="mensaje-bienvenida">
         {% if not is_empleado %}
@@ -24,7 +24,7 @@
     
     <form action="/consulta" method="POST">
         <input type="email" placeholder="E-Mail" id="correo" name="correo" required>
-        <button type="submit">Buscar</button>
+        <button type="submit">Daten Abrufen</button>
     </form>
 
 </body>

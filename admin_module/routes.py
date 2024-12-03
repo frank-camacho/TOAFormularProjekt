@@ -15,15 +15,16 @@ def register_routes(app):
         if request.method == 'POST':
             username = request.form['username']
             password = request.form['password']
-            role = request.form['role']
+            
+            # Asigna un rol predeterminado desde el back-end (por ejemplo, 'cliente')
+            role = 'cliente'
 
             if registrar_usuario(username, password, role):
-                flash("Usuario registrado exitosamente.", "success")  # Mensaje de éxito
-                return redirect('/register')  # Redirige al formulario
+                return "Usuario registrado exitosamente."
             else:
-                flash("Error: El usuario ya existe.", "error")  # Mensaje de error
-                return redirect('/register')  # Redirige al formulario
+                return "Error: El usuario ya existe."
         return render_template('register.html')
+
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
