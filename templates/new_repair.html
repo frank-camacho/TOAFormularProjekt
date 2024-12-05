@@ -8,20 +8,21 @@
     <h1>Neue Reparatur registrieren</h1>
     <form action="/new_repair" method="POST">
         {% for field in fields %}
-            {% if field.type == 'textarea' %}
+            {% if field.type == "textarea" %}
                 <textarea name="{{ field.name }}" placeholder="{{ field.placeholder }}" rows="5" {% if field.required %}required{% endif %}></textarea><br>
-            {% elif field.type == 'select' %}
-                <select name="{{ field.name }}" {% if field.required %}required{% endif %}>
+            {% elif field.type == "select" %}
+                <select name="{{ field.name }}">
                     {% for option in field.options %}
-                        <option value="{{ option }}">{{ option }}</option>
+                        <option value="{{ option }}" {% if option == field.default %}selected{% endif %}>
+                            {{ option }}
+                        </option>
                     {% endfor %}
                 </select><br>
             {% else %}
-                <input type="{{ field.type }}" name="{{ field.name }}" placeholder="{{ field.placeholder }}" {% if field.required %}required{% endif %}
-                       {% if field.step %}step="{{ field.step }}"{% endif %}><br>
+                <input type="{{ field.type }}" name="{{ field.name }}" placeholder="{{ field.placeholder }}" {% if field.required %}required{% endif %}><br>
             {% endif %}
         {% endfor %}
-        <button type="submit">Absenden</button>
-    </form>    
+        <button type="submit">Reparatur registrieren</button>
+    </form>
 </body>
 </html>
