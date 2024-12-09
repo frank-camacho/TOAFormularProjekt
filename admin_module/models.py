@@ -1,4 +1,6 @@
 import pandas as pd
+from functools import wraps
+from flask import session, redirect, url_for
 
 def filtrar_datos_por_correo(archivo_excel, correo):
     """
@@ -40,3 +42,12 @@ def filtrar_datos_por_correo(archivo_excel, correo):
         # Loguear el error y retornar un DataFrame vacío
         print(f"Error al filtrar datos: {e}")
         return pd.DataFrame()
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # Verificar si el usuario tiene permisos de administrador
+        if 'role' not in session or session['role'] != 'admin':
+            return redirect(url_for('login'))  # Redirigir a la página de login si no es administrador
+        return f(*args, **kwargs)
+    return decorated_function

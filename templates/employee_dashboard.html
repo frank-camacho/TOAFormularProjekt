@@ -3,41 +3,42 @@
 <head>
     <title>RMA Management - Mitarbeiter</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </head>
 <body>
     <h1>Willkommen im Mitarbeiter-Portal</h1>
-    <p>Wählen Sie eine Aktion aus:</p>
-
-    <div>
-        <a href="/new_requests">
-            <button type="button">Neue Bestellungen ansehen</button>
-        </a>
-    </div>
-    <div>
-        <a href="/assigned_requests">
-            <button type="button">Bearbeitete Bestellungen ansehen</button>
-        </a>
-    </div>
-    <div>
-        <a href="/new_rma">
-            <button type="button">Neues RMA erstellen</button>
-        </a>
-    </div>
-    <div>
-        <a href="/report">
-            <button type="button">Bericht generieren</button>
-        </a>
-    </div>
-    <div>
-        <a href="/new_repair">
-            <button type="button">Neue Reparatur registrieren</button>
-        </a>
-    </div>
-
-    <!-- Sección para visualizar reparaciones existentes -->
-    <h2>Übersicht über Reparaturen</h2>
-    <table>
+    
+    <!-- Acciones -->
+    <table style="width: 50%;">
         <thead>
+            <tr>
+                <th>
+                    <a href="/new_requests">
+                        <button type="button">Neue Bestellungen ansehen</button>
+                    </a>
+                </th>
+                <th>
+                    <a href="/new_rma">
+                        <button type="button">Neues RMA erstellen</button>
+                    </a>
+                </th>
+                <th>
+                    <a href="/report">
+                        <button type="button">Bericht generieren</button>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+    </table>
+    
+
+    <!-- Reparaturen Zusammenfassung -->
+    <table class="stats-table" style="width: 50%;;">
+        <thead>
+            <tr>
+                <th colspan="6" style="text-align: center;">Reparaturen Zusammenfassung</th>
+            </tr>
             <tr>
                 <th>ID</th>
                 <th>Produkt</th>
@@ -56,7 +57,7 @@
                 <td>{{ request.status }}</td>
                 <td>{{ request.assigned_taller }}</td>
                 <td>
-                    <form action="/update_status" method="POST">
+                    <form action="/update_status" method="POST" style="display: flex; gap: 5px;">
                         <input type="hidden" name="id" value="{{ request.id }}">
                         <select name="status">
                             <option value="Neu" {% if request.status == "Neu" %}selected{% endif %}>Neu</option>
@@ -70,5 +71,42 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Dashboard de estadísticas con gráfico -->
+    <div class="table-graph-container">
+        <div>
+            <!-- Tabla de estadísticas -->
+            <table class="stats-table">
+                <thead>
+                    <tr>
+                        <th>Kategorie</th>
+                        <th>Anzahl</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Gesamt RMAs</td>
+                        <td>{{ stats.total_rmas }}</td>
+                    </tr>
+                    <tr>
+                        <td>Neu</td>
+                        <td>{{ stats.new }}</td>
+                    </tr>
+                    <tr>
+                        <td>In Arbeit</td>
+                        <td>{{ stats.in_progress }}</td>
+                    </tr>
+                    <tr>
+                        <td>Abgeschlossen</td>
+                        <td>{{ stats.completed }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <!-- Gráfico de pastel -->
+            <canvas id="rmaChart"></canvas>
+        </div>
+    </div>
 </body>
 </html>

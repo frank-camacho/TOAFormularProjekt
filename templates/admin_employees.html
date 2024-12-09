@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benutzerverwaltung</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+</head>
+<body>
+    <h1>Benutzerverwaltung</h1>
+    <!-- Botón para agregar nuevos usuarios -->
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="/admin/employees/add">
+            <button type="button">➕ Neuen Benutzer hinzufügen</button>
+        </a>
+    </div>
+    <!-- Tabla de usuarios -->
+    <table id="employeesTable" class="display">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Benutzername</th>
+                <th>Rolle</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user[0] }}</td>
+                <td>{{ user[1] }}</td>
+                <td>{{ user[2] }}</td>
+                <td>
+                    <a href="/admin/employees/edit/{{ user[0] }}">
+                        <button type="button">Bearbeiten</button>
+                    </a>
+                    <form action="/admin/employees/delete/{{ user[0] }}" method="POST" style="display: inline;">
+                        <button type="submit" onclick="return confirm('Sind Sie sicher?');">Löschen</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Botón para volver al inicio -->
+    <div style="margin-top: 20px;">
+        <a href="/">
+            <button type="button">Zurück zur Startseite</button>
+        </a>
+    </div>
+
+    <!-- Carga de scripts externos -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

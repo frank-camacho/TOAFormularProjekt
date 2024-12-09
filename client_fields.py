@@ -8,5 +8,7 @@ CLIENT_FIELDS = [
     {"name": "telefon", "type": "text", "placeholder": "Telefonnummer", "required": True},
     {"name": "email", "type": "email", "placeholder": "E-Mail-Adresse", "required": True},
     {"name": "anmeldedatum", "type": "date", "placeholder": "Anmeldedatum", "required": True},
-    {"name": "issue_description", "type": "textarea", "placeholder": "Problembeschreibung", "required": True}
+    {"name": "issue_description", "type": "textarea", "placeholder": "Problembeschreibung", "required": True},
+    {"name": "status", "type": "select", "placeholder": "Status", "options": ["Neu", "In Arbeit", "Abgeschlossen"], "required": True},  # Nuevo campo para estado.
+    {"name": "assigned_taller", "type": "text", "placeholder": "Zugewiesene Werkstatt", "required": False}  # Nuevo campo opcional.
 ]

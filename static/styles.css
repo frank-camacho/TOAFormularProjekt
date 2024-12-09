@@ -6,187 +6,148 @@ body {
     background-color: #f4f4f9;
 }
 
+.center{
+    margin-left: auto;
+    margin-right: auto;
+}
+
 h1 {
     font-size: 20px;
     color: #333;
     text-align: center;
 }
 
-/* Formularios */
-form {
-    font-size: 12px;
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 100%;
-    margin: auto;
-}
-
-label {
-    font-size: 12px;
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    margin: auto;
-}
-
-input {
-    font-size: 12px;
-    width: 20%;
-    padding: 5px;
-    margin: auto;
-    margin-bottom: 5px;
-
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    border: none;
-    border-bottom: 1px solid #3f3f3f;
-    border-radius: 0px;
-}
-
-input::placeholder {
-    color: #5daf6a;
-    opacity: 30%;
-}
-
-/* Botones */
-button {
-    font-size: 12px;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-
-    border: none;
-    border-bottom: 2px solid #3f3f3f;
-    border-left: 2px solid #3f3f3f;
-    border-top: 1px solid #3f3f3f;
-    border-right: 1px solid #3f3f3f;
-    border-radius: 5px;
-
-    margin: auto;
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-/* Botón para nueva búsqueda */
-.back-button {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.back-button button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.back-button button:hover {
-    background-color: #45a049;
-}
-
-/* Mensajes */
-.mensaje-bienvenida {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    margin: 10px;
-}
-
-.mensaje-bienvenida p {
-    font-size: 10px;
-    color: #10801f;
-    font-weight: bold;
-}
-
-/* Tablas */
+/* Estilos generales de tablas */
 table {
-    font-size: 12px;
-    width: auto;
-    max-width: 600px;
-    margin: 5px auto;
+    width: 100%;
     border-collapse: collapse;
+    margin: 20px auto;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-th, td {
-    font-size: 12px;
-    padding: 2px;
     text-align: left;
-    border-bottom: 2px solid #ddd;
 }
 
+/* Encabezados de tabla */
 th {
     background-color: #4CAF50;
     color: white;
     font-weight: bold;
-    cursor: pointer;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+/* Filas y celdas */
+td {
+    padding: 8px;
+    border: 1px solid #ddd;
 }
 
 tr:hover {
-    background-color: #f1f1f1;
+    background-color: #f9f9f9;
 }
 
-/* Controles de la tabla */
-.table-controls {
-    margin-bottom: 1em;
-    text-align: center;
+/* Tabla de estadísticas */
+.stats-table {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #ccc;
 }
 
-/* Paginación */
-.pagination {
-    margin-top: 1em;
-    text-align: center;
+.stats-table th, .stats-table td {
+    text-align: left;
+    padding: 10px;
 }
 
-.pagination button {
-    margin: 0 2px;
-    padding: 5px 10px;
-    border: none;
-    background-color: #f2f2f2;
+/* Contenedor de tabla y gráfico */
+.table-graph-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.table-graph-container .stats-table {
+    flex: 1;
+}
+
+.table-graph-container canvas {
+    flex: 1;
+    max-width: 100%;
+}
+
+/* Formularios */
+.rma-form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    cursor: pointer;
+    font-size: 14px;
 }
 
-.pagination button:hover {
-    background-color: #ddd;
-}
-
-.pagination button.active {
+.form-button {
+    padding: 10px;
     background-color: #4CAF50;
     color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-/* Enlaces */
-a {
-    color: #007bff;
-    text-decoration: none;
+.form-button:hover {
+    background-color: #45a049;
+}
+/* Contenedor de menú */
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px; /* Espaciado entre los botones */
+    margin-top: 30px;
 }
 
-a:hover {
-    text-decoration: underline;
+/* Botones del menú */
+.menu-button {
+    font-size: 16px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 250px;
+    text-align: center;
 }
 
-/* Compatibilidad con DataTables */
-.dataTables_wrapper {
-    width: 80%;
-    margin: 0 auto;
-}
-
-.dataTables_filter {
-    margin-bottom: 5px;
-}
-
-.dataTables_length, .dataTables_filter {
-    font-size: 12px;
+.menu-button:hover {
+    background-color: #45a049;
 }

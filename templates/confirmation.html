@@ -7,20 +7,19 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Bestätigung</h1>
-    <p>{{ message }}</p>
+    <h1 style="text-align: center;">Bestätigung</h1>
+    <p style="text-align: center;">{{ message }}</p>
 
-    {% if is_employee %}
+    <div style="text-align: center; margin-top: 20px;">
         <a href="/employee_dashboard">
             <button type="button">Zurück zum Mitarbeiterportal</button>
         </a>
-    {% else %}
-        <a href="/register_rma">
-            <button type="button">Neue Reparaturanfrage erstellen</button>
+        <a href="/new_rma" style="margin-left: 10px;">
+            <button type="button">Neues RMA erstellen</button>
         </a>
-        <a href="/consulta">
+        <a href="/consulta" style="margin-left: 10px;">
             <button type="button">Reparaturstatus abrufen</button>
         </a>
-    {% endif %}
+    </div>
 </body>
 </html>

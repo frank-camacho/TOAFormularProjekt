@@ -3,34 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Datos</title>
+    <title>Daten Abrufen</title>
+    <!-- Enlace al archivo CSS principal -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Enlaces a DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 </head>
 <body>
     <h1>Daten Abrufen</h1>
-    
-    <form action="/new_repair" method="POST">
-        {% for field in fields %}
-            {% if field.type == 'textarea' %}
-                <textarea name="{{ field.name }}" placeholder="{{ field.placeholder }}" rows="5" {% if field.required %}required{% endif %}></textarea><br>
-            {% elif field.type == 'select' %}
-                <select name="{{ field.name }}" {% if field.required %}required{% endif %}>
-                    {% for option in field.options %}
-                        <option value="{{ option }}">{{ option }}</option>
-                    {% endfor %}
-                </select><br>
-            {% else %}
-                <input type="{{ field.type }}" name="{{ field.name }}" placeholder="{{ field.placeholder }}" {% if field.required %}required{% endif %}
-                       {% if field.step %}step="{{ field.step }}"{% endif %}><br>
-            {% endif %}
-        {% endfor %}
-        <button type="submit">Absenden</button>
-    </form>
-    
 
-    <!-- Mensaje de error si no se encuentran resultados -->
+    <!-- Formulario para consulta -->
+    <form action="/consulta" method="POST" class="rma-form">
+        <div class="form-group">
+            <input type="text" name="kundennummer" placeholder="Kundennummer" required class="form-input">
+        </div>
+        <button type="submit" class="form-button">Suchen</button>
+    </form>
+
+    <!-- Mensaje si no se encuentran resultados -->
     {% if mensaje %}
         <p>{{ mensaje }}</p>
     {% endif %}
+
+    <!-- Tabla de resultados -->
+    {% if resultados %}
+        <table id="resultsTable" class="display">
+            <thead>
+                <tr>
+                    {% for columna in columnas %}
+                        <th>{{ columna }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for fila in resultados %}
+                    <tr>
+                        {% for celda in fila %}
+                            <td>{{ celda }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <!-- Botón para volver al inicio -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="/">
+            <button type="button" class="form-button">Zurück zum Start</button>
+        </a>
+    </div>
+
+    <!-- Enlace al archivo de scripts.js -->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>

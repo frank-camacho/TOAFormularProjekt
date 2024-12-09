@@ -1,27 +1,80 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <title>Reparaturanfragen</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOA Reparaturportal</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Willkommen zum Reparaturportal</h1>
-    <p>Hier können Sie den Status Ihrer Reparaturanfragen überprüfen oder eine neue Reparaturanfrage registrieren.</p>
-    
-    <div>
-        <a href="/consulta">
-            <button type="button">Reparaturstatus abrufen</button>
-        </a>
+    <h1>Willkommen zum TOA Reparaturportal</h1>
+
+    <!-- Selección de Cliente o Empleado -->
+    <div class="menu-container">
+        <button type="button" class="form-button" onclick="mostrarMenu('cliente')">Ich bin ein TOA-Kunde</button>
+        <button type="button" class="form-button" onclick="mostrarMenu('mitarbeiter')">Ich bin ein TOA-Mitarbeiter</button>
     </div>
-    <div>
-        <a href="/register_rma">
-            <button type="button">Neue Reparaturanfrage registrieren</button>
-        </a>
+
+    <!-- Menú para Clientes -->
+    <div id="cliente-menu" style="display: none; margin-top: 20px; width: 30%;" class="center">
+        <table class="center">
+            <tr>
+                <th>
+                    <a href="/consulta">
+                        <button type="button" class="form-button">Reparaturstatus Abrufen</button>
+                    </a>
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    <a href="/register_rma">
+                        <button type="button" class="form-button">Neue Reparaturanfrage Registrieren</button>
+                    </a>
+                </th>
+            </tr>
+        </table>
     </div>
-    <div>
-        <a href="/employee_dashboard">
-            <button type="button">Mitarbeiterportal</button>
-        </a>
-    </div>    
+
+    <!-- Menú para Empleados -->
+    <div id="mitarbeiter-menu" style="display: none; margin-top: 20px;">
+        <form action="/login" method="POST" class="rma-form">
+            <div class="form-group">
+                <input type="text" name="username" placeholder="Benutzername" required class="form-input">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Passwort" required class="form-input">
+            </div>
+            <button type="submit" class="form-button">Login</button>
+        </form>
+
+        <!-- Opciones de Administración -->
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="/admin/employees">
+                <button type="button" class="form-button">Benutzerverwaltung</button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Mensajes de error -->
+    {% if error_message %}
+        <div class="error-message" style="color: red; text-align: center; margin-top: 10px;">
+            {{ error_message }}
+        </div>
+    {% endif %}
+
+    <script>
+        function mostrarMenu(tipo) {
+            // Ocultar ambos menús
+            document.getElementById('cliente-menu').style.display = 'none';
+            document.getElementById('mitarbeiter-menu').style.display = 'none';
+            
+            // Mostrar el menú correspondiente
+            if (tipo === 'cliente') {
+                document.getElementById('cliente-menu').style.display = 'block';
+            } else if (tipo === 'mitarbeiter') {
+                document.getElementById('mitarbeiter-menu').style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>

@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>RMA-Anmeldung für Reparatur</h1>
-    <form action="/new_repair" method="POST">
+    <form action="/register_rma" method="POST" class="rma-form">
         {% for field in fields %}
             {% if field.type == 'textarea' %}
                 <textarea name="{{ field.name }}" placeholder="{{ field.placeholder }}" rows="5" {% if field.required %}required{% endif %}></textarea><br>

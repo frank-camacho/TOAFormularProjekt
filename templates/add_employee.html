@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Neuen Mitarbeiter hinzufügen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Neuen Mitarbeiter hinzufügen</h1>
+    <form action="{{ url_for('add_employee') }}" method="POST" class="rma-form">
+        <input type="text" name="username" placeholder="Benutzername" required>
+        <input type="password" name="password" placeholder="Passwort" required>
+        <select name="role">
+            <option value="admin">Admin</option>
+            <option value="employee">Mitarbeiter</option>
+        </select>
+        <button type="submit">Speichern</button>
+    </form>
+</body>
+</html>

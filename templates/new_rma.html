@@ -5,22 +5,36 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Neues RMA Erstellen</h1>
+    <h1 style="text-align: center;">Neues RMA Erstellen</h1>
 
-    <form action="/new_rma" method="POST">
-        <label for="product">Produkt</label>
-        <input type="text" id="product" name="product" placeholder="Produktname" required>
+    <form action="/new_rma" method="POST" class="rma-form">
+        {% for field in fields %}
+        <div class="form-group">
+            {% if field.name == 'anmeldedatum' %}
+                <label for="{{ field.name }}" class="form-label">{{ field.placeholder }}</label>
+            {% endif %}
+            {% if field.type == 'textarea' %}
+                <textarea id="{{ field.name }}" name="{{ field.name }}" 
+                          class="form-textarea"
+                          placeholder="{{ field.placeholder }}" 
+                          {% if field.required %}required{% endif %}></textarea>
+            {% elif field.type == 'select' %}
+                <select id="{{ field.name }}" name="{{ field.name }}" class="form-select" {% if field.required %}required{% endif %}>
+                    {% for option in field.options %}
+                        <option value="{{ option }}">{{ option }}</option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}" 
+                       class="form-input"
+                       placeholder="{{ field.placeholder }}" 
+                       {% if field.type == 'number' and field.step %}step="{{ field.step }}"{% endif %}
+                       {% if field.required %}required{% endif %}>
+            {% endif %}
+        </div>
+        {% endfor %}
 
-        <label for="serial_number">Seriennummer</label>
-        <input type="text" id="serial_number" name="serial_number" placeholder="Seriennummer" required>
-
-        <label for="customer">Kunde</label>
-        <input type="text" id="customer" name="customer" placeholder="Kundenname" required>
-
-        <label for="issue_description">Fehlerbeschreibung</label>
-        <textarea id="issue_description" name="issue_description" placeholder="Beschreiben Sie den Fehler" required></textarea>
-
-        <button type="submit">RMA Erstellen</button>
+        <button type="submit" class="form-button">RMA Erstellen</button>
     </form>
 </body>
 </html>
