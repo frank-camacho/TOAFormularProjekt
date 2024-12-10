@@ -1,8 +1,9 @@
-# admin_module/__init__.py
-
 from flask import Flask
-from .routes import register_routes  # Importa las rutas desde routes.py
+from .routes import admin_bp  # Importamos el blueprint definido en routes.py
 
-def init_app(app: Flask):
-    """Función para inicializar la aplicación con las rutas."""
-    register_routes(app)
+def init_admin_module(app: Flask):
+    """
+    Inicializa el módulo administrativo registrando su blueprint.
+    """
+    # Registrar el blueprint administrativo con su prefijo
+    app.register_blueprint(admin_bp, url_prefix='/admin')

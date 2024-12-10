@@ -7,7 +7,7 @@
 <body>
     <h1 style="text-align: center;">Neues RMA Erstellen</h1>
 
-    <form action="/new_rma" method="POST" class="rma-form">
+    <form action="{{ routes_map['rma_new_rma']() }}" method="POST" class="rma-form">
         {% for field in fields %}
         <div class="form-group">
             {% if field.name == 'anmeldedatum' %}

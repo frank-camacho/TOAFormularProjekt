@@ -5,54 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOA Reparaturportal</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </head>
 <body>
     <h1>Willkommen zum TOA Reparaturportal</h1>
 
-    <!-- Selección de Cliente o Empleado -->
-    <div class="menu-container">
-        <button type="button" class="form-button" onclick="mostrarMenu('cliente')">Ich bin ein TOA-Kunde</button>
-        <button type="button" class="form-button" onclick="mostrarMenu('mitarbeiter')">Ich bin ein TOA-Mitarbeiter</button>
-    </div>
-
-    <!-- Menú para Clientes -->
-    <div id="cliente-menu" style="display: none; margin-top: 20px; width: 30%;" class="center">
+    <!-- Opciones para Clientes -->
+    <div id="cliente-menu" style="margin-top: 20px; width: 20%;" class="center">
         <table class="center">
             <tr>
                 <th>
-                    <a href="/consulta">
+                    <a href="{{ routes_map['client_consulta']() }}">
                         <button type="button" class="form-button">Reparaturstatus Abrufen</button>
                     </a>
                 </th>
             </tr>
             <tr>
                 <th>
-                    <a href="/register_rma">
-                        <button type="button" class="form-button">Neue Reparaturanfrage Registrieren</button>
+                    <a href="{{ routes_map['client_register_rma']() }}">
+                        <button type="button" class="form-button">Neue Reparaturanfrage Registrieren (RMA)</button>
                     </a>
                 </th>
             </tr>
         </table>
     </div>
 
-    <!-- Menú para Empleados -->
-    <div id="mitarbeiter-menu" style="display: none; margin-top: 20px;">
-        <form action="/login" method="POST" class="rma-form">
+    <!-- Formulario de Inicio de Sesión para Empleados -->
+    <div id="mitarbeiter-login" style="margin-top: 40px; width: 20%;" class="center">
+        <h2>Mitarbeiter-Login</h2>
+        <form action="{{ routes_map['shared_login']() }}" method="POST" class="rma-form">
             <div class="form-group">
                 <input type="text" name="username" placeholder="Benutzername" required class="form-input">
             </div>
             <div class="form-group">
                 <input type="password" name="password" placeholder="Passwort" required class="form-input">
             </div>
-            <button type="submit" class="form-button">Login</button>
+            <button type="submit" class="form-button">Anmelden</button>
         </form>
-
-        <!-- Opciones de Administración -->
-        <div style="text-align: center; margin-top: 15px;">
-            <a href="/admin/employees">
-                <button type="button" class="form-button">Benutzerverwaltung</button>
-            </a>
-        </div>
     </div>
 
     <!-- Mensajes de error -->
@@ -61,20 +50,5 @@
             {{ error_message }}
         </div>
     {% endif %}
-
-    <script>
-        function mostrarMenu(tipo) {
-            // Ocultar ambos menús
-            document.getElementById('cliente-menu').style.display = 'none';
-            document.getElementById('mitarbeiter-menu').style.display = 'none';
-            
-            // Mostrar el menú correspondiente
-            if (tipo === 'cliente') {
-                document.getElementById('cliente-menu').style.display = 'block';
-            } else if (tipo === 'mitarbeiter') {
-                document.getElementById('mitarbeiter-menu').style.display = 'block';
-            }
-        }
-    </script>
 </body>
 </html>

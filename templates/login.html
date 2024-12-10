@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Login</h1>
-    <form action="/login" method="POST" class="rma-form">
+    <form action="{{ routes_map['shared_login']() }}" method="POST" class="rma-form">
         <div class="form-group">
             <input type="text" name="username" placeholder="Benutzername" required>
         </div>
@@ -18,7 +18,7 @@
 
     {% if is_admin %}
     <div style="margin-top: 20px;">
-        <a href="/admin/employees">
+        <a href="{{ routes_map['manage_employees']() }}" class="center">
             <button class="form-button">Mitarbeiterverwaltung</button>
         </a>
     </div>

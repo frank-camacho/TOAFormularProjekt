@@ -115,5 +115,20 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn("⚠️ Elemento de gráfico no encontrado. El gráfico de pastel no se cargó.");
     }
 
+    // Función para mostrar menús en index.html
+    window.mostrarMenu = function(tipo) {
+        console.log(`Mostrando menú: ${tipo}`);
+        // Ocultar ambos menús
+        document.getElementById('cliente-menu').style.display = 'none';
+        document.getElementById('mitarbeiter-menu').style.display = 'none';
+        
+        // Mostrar el menú correspondiente
+        if (tipo === 'cliente') {
+            document.getElementById('cliente-menu').style.display = 'block';
+        } else if (tipo === 'mitarbeiter') {
+            document.getElementById('mitarbeiter-menu').style.display = 'block';
+        }
+    };
+
     console.log("Si los errores persisten, verifica la consola del navegador para más detalles.");
 });

@@ -8,7 +8,18 @@
 </head>
 <body>
     <h1>RMA-Anmeldung für Reparatur</h1>
-    <form action="/register_rma" method="POST" class="rma-form">
+
+    <!-- Mensaje informativo para el cliente -->
+    <p style="text-align: justify; margin-bottom: 20px; width: 30%;" class="center">
+        ⚠️ <strong>WICHTIG.</strong> Liebe kunden: diesem Formular erstellen Sie eine <strong>neue</strong> Reparaturanfrage (RMA). Falls Ihr Produkt nicht unter Garantie steht, 
+        keine Sorge, TOA wird Ihr Produkt prüfen und reparieren. Nach Bestätigung Ihrer Anfrage wird Ihnen ein Link für die Online-Zahlung einer Grundgebühr bereitgestellt, 
+        die die vorläufigen Kosten für die Überprüfung des Produkts abdeckt. Dieser Betrag wird zusätzlich von den Gesamtreparaturkosten abgezogen. 
+        Sollte eine zusätzliche Zahlung erforderlich sein, wird unser Team Sie entsprechend informieren.
+
+    </p>
+
+    <!-- Formulario para la solicitud -->
+    <form action="{{ routes_map['client_register_rma']() }}" method="POST" class="rma-form">
         {% for field in fields %}
             {% if field.type == 'textarea' %}
                 <textarea name="{{ field.name }}" placeholder="{{ field.placeholder }}" rows="5" {% if field.required %}required{% endif %}></textarea><br>
@@ -25,6 +36,12 @@
         {% endfor %}
         <button type="submit">Absenden</button>
     </form>
-    
+
+    <!-- Botón para volver al inicio -->
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="{{ routes_map['shared_index']() }}">
+            <button type="button" class="form-button">Zurück zum Hauptmenü</button>
+        </a>
+    </div>
 </body>
 </html>

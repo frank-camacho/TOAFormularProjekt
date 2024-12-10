@@ -15,7 +15,7 @@
     <h1>Daten Abrufen</h1>
 
     <!-- Formulario para consulta -->
-    <form action="/consulta" method="POST" class="rma-form">
+    <form action="{{ routes_map['client_consulta']() }}" method="POST" class="rma-form">
         <div class="form-group">
             <input type="text" name="kundennummer" placeholder="Kundennummer" required class="form-input">
         </div>
@@ -51,7 +51,7 @@
 
     <!-- Botón para volver al inicio -->
     <div style="text-align: center; margin-top: 20px;">
-        <a href="/">
+        <a href="{{ routes_map['shared_index']() }}">
             <button type="button" class="form-button">Zurück zum Start</button>
         </a>
     </div>

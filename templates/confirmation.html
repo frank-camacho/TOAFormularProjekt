@@ -11,13 +11,13 @@
     <p style="text-align: center;">{{ message }}</p>
 
     <div style="text-align: center; margin-top: 20px;">
-        <a href="/employee_dashboard">
-            <button type="button">Zurück zum Mitarbeiterportal</button>
+        <a href="{{ routes_map['shared_index']() }}">
+            <button type="button">Zurück zum Hauptmenü</button>
         </a>
-        <a href="/new_rma" style="margin-left: 10px;">
+        <a href="{{ routes_map['client_register_rma']() }}" style="margin-left: 10px;">
             <button type="button">Neues RMA erstellen</button>
         </a>
-        <a href="/consulta" style="margin-left: 10px;">
+        <a href="{{ routes_map['client_consulta']() }}" style="margin-left: 10px;">
             <button type="button">Reparaturstatus abrufen</button>
         </a>
     </div>

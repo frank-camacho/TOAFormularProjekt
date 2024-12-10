@@ -10,11 +10,13 @@
 <body>
     <h1>Benutzerverwaltung</h1>
     <!-- Botón para agregar nuevos usuarios -->
-    <div style="margin-top: 20px; text-align: center;">
-        <a href="/admin/employees/add">
-            <button type="button">➕ Neuen Benutzer hinzufügen</button>
+    {% if current_user.role == 'admin' %}
+    <div style="margin-top: 20px;">
+        <a href="{{ routes_map.add_employee() }}">
+            <button type="button">Neuen Benutzer hinzufügen</button>
         </a>
     </div>
+    {% endif %}
     <!-- Tabla de usuarios -->
     <table id="employeesTable" class="display">
         <thead>
@@ -32,10 +34,10 @@
                 <td>{{ user[1] }}</td>
                 <td>{{ user[2] }}</td>
                 <td>
-                    <a href="/admin/employees/edit/{{ user[0] }}">
+                    <a href="{{ routes_map.edit_employee(user[0]) }}">
                         <button type="button">Bearbeiten</button>
                     </a>
-                    <form action="/admin/employees/delete/{{ user[0] }}" method="POST" style="display: inline;">
+                    <form action="{{ routes_map.delete_employee(user[0]) }}" method="POST" style="display: inline;">
                         <button type="submit" onclick="return confirm('Sind Sie sicher?');">Löschen</button>
                     </form>
                 </td>
@@ -46,7 +48,7 @@
 
     <!-- Botón para volver al inicio -->
     <div style="margin-top: 20px;">
-        <a href="/">
+        <a href="{{ routes_map.index() }}">
             <button type="button">Zurück zur Startseite</button>
         </a>
     </div>

@@ -21,14 +21,19 @@
             {% for request in requests %}
                 <tr>
                     <td>{{ request.id }}</td>
-                    <td>{{ request.product }}</td>
-                    <td>{{ request.customer }}</td>
+                    <td>{{ request.modell }}</td> <!-- Reemplazo de 'product' por 'modell' -->
+                    <td>{{ request.name }}</td> <!-- Reemplazo de 'customer' por 'name' -->
                     <td>{{ request.status }}</td>
-                    <td>{{ request.date }}</td>
+                    <td>{{ request.anmeldedatum }}</td> <!-- Reemplazo de 'date' por 'anmeldedatum' -->
                     <td>
-                        <form action="/assign_request" method="POST">
+                        <form action="{{ routes_map['employee_update_status']() }}" method="POST">
                             <input type="hidden" name="id" value="{{ request.id }}">
-                            <button type="submit">Zuweisen</button>
+                            <select name="status">
+                                <option value="Neu" {% if request.status == "Neu" %}selected{% endif %}>Neu</option>
+                                <option value="In Arbeit" {% if request.status == "In Arbeit" %}selected{% endif %}>In Arbeit</option>
+                                <option value="Abgeschlossen" {% if request.status == "Abgeschlossen" %}selected{% endif %}>Abgeschlossen</option>
+                            </select>
+                            <button type="submit">Aktualisieren</button>
                         </form>
                     </td>
                 </tr>
