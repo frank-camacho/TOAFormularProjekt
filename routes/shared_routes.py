@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, session, redirect, g, request
 from utils.routes_map import routes_map
 import sqlite3
 from werkzeug.security import check_password_hash
-from utils.db_utils import get_db_path
+from utils.db_utils import get_users_db_path
 
 # Crear un blueprint para las rutas compartidas
 shared_bp = Blueprint('shared', __name__)
@@ -15,9 +15,9 @@ def load_current_user():
     user_id = session.get('user_id')
     if user_id:
         try:
-            with sqlite3.connect(get_db_path()) as conn:
+            with sqlite3.connect(get_users_db_path()) as conn:
                 c = conn.cursor()
-                c.execute('SELECT id, username, role FROM employees WHERE id = ?', (user_id,))
+                c.execute('SELECT id, username, role FROM users WHERE id = ?', (user_id,))
                 user = c.fetchone()
                 if user:
                     g.current_user = {'id': user[0], 'username': user[1], 'role': user[2]}
@@ -60,11 +60,11 @@ def login():
         password = request.form['password']
 
         try:
-            conn = sqlite3.connect(get_db_path())
+            conn = sqlite3.connect(get_users_db_path())
             c = conn.cursor()
 
             # Consultar la base de datos para verificar las credenciales
-            c.execute('SELECT id, password, role FROM employees WHERE username = ?', (username,))
+            c.execute('SELECT id, password, role FROM users WHERE username = ?', (username,))
             user = c.fetchone()
             conn.close()
 

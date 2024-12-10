@@ -1,19 +1,52 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <title>Mitarbeiter bearbeiten</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benutzer bearbeiten</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Mitarbeiter bearbeiten</h1>
-    <form action="{{ url_for('edit_employee', employee_id=employee[0]) }}" method="POST" class="rma-form">
-        <input type="text" name="username" value="{{ employee[1] }}" required>
-        <input type="password" name="password" value="{{ employee[2] }}" required>
-        <select name="role">
-            <option value="admin" {% if employee[3] == 'admin' %}selected{% endif %}>Admin</option>
-            <option value="employee" {% if employee[3] == 'employee' %}selected{% endif %}>Mitarbeiter</option>
-        </select>
-        <button type="submit">Speichern</button>
+    <h1 style="text-align: center;">Benutzer bearbeiten</h1>
+
+    <!-- Notificaciones de error o éxito -->
+    {% if message %}
+    <div style="text-align: center; color: green; margin-bottom: 10px;">
+        {{ message }}
+    </div>
+    {% elif error_message %}
+    <div style="text-align: center; color: red; margin-bottom: 10px;">
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    <!-- Formulario para editar usuario -->
+    <form action="{{ routes_map['admin_edit_employee'](employee[0]) }}" method="POST" class="rma-form" style="width: 50%; margin: 0 auto;">
+        <div class="form-group">
+            <label for="username">Benutzername</label>
+            <input type="text" id="username" name="username" value="{{ employee[1] }}" required class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="password">Passwort</label>
+            <input type="password" id="password" name="password" placeholder="Neues Passwort (optional)" class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="role">Rolle</label>
+            <select id="role" name="role" class="form-select">
+                <option value="admin" {% if employee[2] == 'admin' %}selected{% endif %}>Admin</option>
+                <option value="employee" {% if employee[2] == 'employee' %}selected{% endif %}>Mitarbeiter</option>
+            </select>
+        </div>
+        <div style="text-align: center;">
+            <button type="submit" class="form-button">Speichern</button>
+        </div>
     </form>
+
+    <!-- Botón para regresar -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ routes_map['admin_manage_employees']() }}">
+            <button type="button" class="form-button">Zurück zur Benutzerverwaltung</button>
+        </a>
+    </div>
 </body>
 </html>

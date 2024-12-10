@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <title>Mitarbeiterverwaltung</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benutzerverwaltung</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Mitarbeiterverwaltung</h1>
-    <a href="{{ url_for('add_employee') }}">
-        <button>Neuen Mitarbeiter hinzufügen</button>
-    </a>
-    <table>
+    <h1 style="text-align: center;">Benutzerverwaltung</h1>
+
+    <!-- Botón para agregar nuevos Benutzer -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="{{ routes_map['admin_add_employee']() }}">
+            <button type="button" class="form-button">➕ Neuen Benutzer hinzufügen</button>
+        </a>
+    </div>
+
+    <!-- Tabla de Benutzer -->
+    <table class="table center">
         <thead>
             <tr>
                 <th>ID</th>
@@ -19,20 +27,29 @@
             </tr>
         </thead>
         <tbody>
-            {% for employee in employees %}
+            {% for user in users %}
             <tr>
-                <td>{{ employee[0] }}</td>
-                <td>{{ employee[1] }}</td>
-                <td>{{ employee[3] }}</td>
+                <td>{{ user[0] }}</td>
+                <td>{{ user[1] }}</td>
+                <td>{{ user[2] }}</td>
                 <td>
-                    <a href="{{ url_for('edit_employee', employee_id=employee[0]) }}">Bearbeiten</a> |
-                    <form action="{{ url_for('delete_employee', employee_id=employee[0]) }}" method="POST" style="display:inline;">
-                        <button type="submit">Löschen</button>
+                    <a href="{{ routes_map['admin_edit_employee'](user[0]) }}">
+                        <button type="button">Bearbeiten</button>
+                    </a>
+                    <form action="{{ routes_map['admin_delete_employee'](user[0]) }}" method="POST" style="display: inline;">
+                        <button type="submit" class="form-button" onclick="return confirm('Sind Sie sicher, dass Sie diesen Benutzer löschen möchten?');">Löschen</button>
                     </form>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Botón para regresar al inicio -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ routes_map['shared_index']() }}">
+            <button type="button" class="form-button">Zurück zur Startseite</button>
+        </a>
+    </div>
 </body>
 </html>

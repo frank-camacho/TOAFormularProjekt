@@ -6,16 +6,17 @@
 </head>
 <body>
     <h1>Login</h1>
-    <form action="{{ routes_map['shared_login']() }}" method="POST" class="rma-form">
-        <div class="form-group">
-            <input type="text" name="username" placeholder="Benutzername" required>
-        </div>
-        <div class="form-group">
-            <input type="password" name="password" placeholder="Passwort" required>
-        </div>
-        <button type="submit" class="form-button">Anmelden</button>
-    </form>
-
+    <div style="margin-top: 40px; width: 20%;" class="center">
+        <form action="{{ routes_map['shared_login']() }}" method="POST" class="rma-form">
+            <div class="form-group">
+                <input type="text" name="username" placeholder="Benutzername" required class="form-input">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Passwort" required class="form-input">
+            </div>
+            <button type="submit" class="form-button" style="text-align: center; width: 50%;">Anmelden</button>
+        </form>
+    </div>
     {% if is_admin %}
     <div style="margin-top: 20px;">
         <a href="{{ routes_map['manage_employees']() }}" class="center">

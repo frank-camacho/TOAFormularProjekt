@@ -79,7 +79,7 @@ tr:hover {
 
 /* Formularios */
 .rma-form {
-    max-width: 500px;
+    max-width: 40%;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -104,11 +104,15 @@ tr:hover {
 .form-input,
 .form-textarea,
 .form-select {
-    width: 100%;
+    width: 90%;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 0px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    opacity: 40%;
 }
 
 .form-button {
@@ -118,7 +122,11 @@ tr:hover {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 12px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+
 }
 
 .form-button:hover {

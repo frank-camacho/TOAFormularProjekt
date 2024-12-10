@@ -15,15 +15,15 @@
         <table class="center">
             <tr>
                 <th>
-                    <a href="{{ routes_map['client_consulta']() }}">
-                        <button type="button" class="form-button">Reparaturstatus Abrufen</button>
+                    <a href="{{ routes_map['client_register_rma']() }}">
+                        <button type="button" class="form-button">Neue Reparaturanfrage Registrieren (RMA)</button>
                     </a>
                 </th>
             </tr>
             <tr>
                 <th>
-                    <a href="{{ routes_map['client_register_rma']() }}">
-                        <button type="button" class="form-button">Neue Reparaturanfrage Registrieren (RMA)</button>
+                    <a href="{{ routes_map['client_consulta']() }}">
+                        <button type="button" class="form-button">Reparaturstatus Abrufen</button>
                     </a>
                 </th>
             </tr>
@@ -40,7 +40,7 @@
             <div class="form-group">
                 <input type="password" name="password" placeholder="Passwort" required class="form-input">
             </div>
-            <button type="submit" class="form-button">Anmelden</button>
+            <button type="submit" class="form-button" style="text-align: center; width: 50%;">Anmelden</button>
         </form>
     </div>
 

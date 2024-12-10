@@ -8,22 +8,25 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 </head>
 <body>
-    <h1>Benutzerverwaltung</h1>
+    <h1 style="text-align: center;">Benutzerverwaltung</h1>
+
     <!-- Botón para agregar nuevos usuarios -->
     {% if current_user.role == 'admin' %}
-    <div style="margin-top: 20px;">
-        <a href="{{ routes_map.add_employee() }}">
-            <button type="button">Neuen Benutzer hinzufügen</button>
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="{{ routes_map['admin_add_employee']() }}">
+            <button type="button">➕ Neuen Benutzer hinzufügen</button>
         </a>
     </div>
     {% endif %}
+
     <!-- Tabla de usuarios -->
-    <table id="employeesTable" class="display">
+    <table id="usersTable" class="display" style="width: 80%; margin: 0 auto;">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Benutzername</th>
                 <th>Rolle</th>
+                <th>Letzter Zugriff</th>
                 <th>Aktionen</th>
             </tr>
         </thead>
@@ -33,11 +36,12 @@
                 <td>{{ user[0] }}</td>
                 <td>{{ user[1] }}</td>
                 <td>{{ user[2] }}</td>
+                <td>{{ user[3] }}</td>
                 <td>
-                    <a href="{{ routes_map.edit_employee(user[0]) }}">
+                    <a href="{{ routes_map['admin_edit_employee'](user[0]) }}">
                         <button type="button">Bearbeiten</button>
                     </a>
-                    <form action="{{ routes_map.delete_employee(user[0]) }}" method="POST" style="display: inline;">
+                    <form action="{{ routes_map['admin_delete_employee'](user[0]) }}" method="POST" style="display: inline;">
                         <button type="submit" onclick="return confirm('Sind Sie sicher?');">Löschen</button>
                     </form>
                 </td>
@@ -47,8 +51,8 @@
     </table>
 
     <!-- Botón para volver al inicio -->
-    <div style="margin-top: 20px;">
-        <a href="{{ routes_map.index() }}">
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="{{ routes_map['shared_index']() }}">
             <button type="button">Zurück zur Startseite</button>
         </a>
     </div>

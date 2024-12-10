@@ -1,19 +1,52 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <title>Neuen Mitarbeiter hinzufügen</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neuen Benutzer hinzufügen</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Neuen Mitarbeiter hinzufügen</h1>
-    <form action="{{ url_for('add_employee') }}" method="POST" class="rma-form">
-        <input type="text" name="username" placeholder="Benutzername" required>
-        <input type="password" name="password" placeholder="Passwort" required>
-        <select name="role">
-            <option value="admin">Admin</option>
-            <option value="employee">Mitarbeiter</option>
-        </select>
-        <button type="submit">Speichern</button>
+    <h1 style="text-align: center;">Neuen Benutzer hinzufügen</h1>
+
+    <!-- Notificaciones de error o éxito -->
+    {% if message %}
+    <div style="text-align: center; color: green; margin-bottom: 10px;">
+        {{ message }}
+    </div>
+    {% elif error_message %}
+    <div style="text-align: center; color: red; margin-bottom: 10px;">
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    <!-- Formulario para agregar usuarios -->
+    <form action="{{ routes_map['admin_add_employee']() }}" method="POST" class="rma-form">
+        <div class="form-group">
+            <label for="username">Benutzername</label>
+            <input type="text" id="username" name="username" placeholder="Benutzername" required class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="password">Passwort</label>
+            <input type="password" id="password" name="password" placeholder="Passwort" required class="form-input">
+        </div>
+        <div class="form-group">
+            <label for="role">Rolle</label>
+            <select id="role" name="role" class="form-select">
+                <option value="admin">Admin</option>
+                <option value="employee">Mitarbeiter</option>
+            </select>
+        </div>
+        <div style="text-align: center;">
+            <button type="submit" class="form-button">Speichern</button>
+        </div>
     </form>
+
+    <!-- Botón para regresar -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ routes_map['admin_manage_employees']() }}">
+            <button type="button" class="form-button">Zurück zur Benutzerverwaltung</button>
+        </a>
+    </div>
 </body>
 </html>
