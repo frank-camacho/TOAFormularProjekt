@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Berichte ansehen</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1 style="text-align: center;">Berichte ansehen für RMA #{{ rma_id }}</h1>
+    <table class="stats-table center" style="width: 50%; margin: auto;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Kommentare</th>
+                <th>Kosten</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+            <tr>
+                <td>{{ report.id }}</td>
+                <td>{{ report.comments }}</td>
+                <td>{{ report.cost }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ routes_map['employee_dashboard']() }}">
+            <button type="button" class="form-button">⬅️ Zurück zum Dashboard</button>
+        </a>
+    </div>
+</body>
+</html>

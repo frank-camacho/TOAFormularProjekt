@@ -5,12 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 </head>
 <body>
     <h1 style="text-align: center;">Neue Bestellungen</h1>
 
-    <!-- Tabla de nuevas solicitudes -->
-    <table class="stats-table center" style="width: 80%; margin: auto;">
+    <!-- Botón para volver al Dashboard -->
+    <div style="margin: 10px 0; text-align: center;">
+        <a href="{{ routes_map['employee_dashboard']() }}">
+            <button type="button" class="form-button">⬅️ Zurück zum Dashboard</button>
+        </a>
+    </div>
+
+    <!-- Tabla interactiva de nuevas solicitudes -->
+    <table id="newRequestsTable" class="stats-table display center" style="width: 80%; margin: auto;">
         <thead>
             <tr>
                 <th>ID</th>
@@ -25,10 +33,10 @@
             {% for request in requests %}
             <tr>
                 <td>{{ request.id }}</td>
-                <td>{{ request.modell }}</td> <!-- Reemplazo de 'product' por 'modell' -->
-                <td>{{ request.name }}</td> <!-- Reemplazo de 'customer' por 'name' -->
+                <td>{{ request.modell }}</td>
+                <td>{{ request.name }}</td>
                 <td>{{ request.status }}</td>
-                <td>{{ request.anmeldedatum }}</td> <!-- Reemplazo de 'date' por 'anmeldedatum' -->
+                <td>{{ request.anmeldedatum }}</td>
                 <td>
                     <form action="{{ routes_map['employee_update_status']() }}" method="POST" style="display: flex; gap: 5px;">
                         <input type="hidden" name="id" value="{{ request.id }}">
@@ -53,5 +61,19 @@
         </a>
     </div>
     {% endif %}
+
+    <!-- Scripts para DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#newRequestsTable').DataTable({
+                language: {
+                    url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/de_de.json"  // Traducción al alemán
+                }
+            });
+        });
+    </script>
 </body>
 </html>

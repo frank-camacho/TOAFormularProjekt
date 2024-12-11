@@ -1,53 +1,76 @@
+from werkzeug.security import generate_password_hash
+import sqlite3
 import os
 
-def buscar_referencias_en_archivos(terminos, directorio='.'):
+def get_users_db_path():
     """
-    Busca referencias específicas en todos los archivos .py y .html de un directorio.
-    
-    Args:
-        terminos (list): Lista de términos a buscar en los archivos.
-        directorio (str): Directorio donde buscar los archivos.
-        
-    Returns:
-        dict: Diccionario con el nombre del archivo como clave y las líneas que contienen referencias como valor.
+    Devuelve la ruta absoluta de la base de datos 'users.db' ubicada en el directorio raíz del proyecto.
     """
-    referencias_encontradas = {}
+    current_dir = os.path.dirname(os.path.abspath(__file__))  # Ruta de la carpeta /scripts
+    return os.path.join(current_dir, '../users.db')
 
-    # Recorre el directorio para buscar archivos
-    for root, _, files in os.walk(directorio):
-        for file in files:
-            # Solo procesar archivos .py y .html
-            if file.endswith('.py') or file.endswith('.html'):
-                filepath = os.path.join(root, file)
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    lines = f.readlines()
-                    for i, line in enumerate(lines, start=1):
-                        # Busca términos en cada línea
-                        for termino in terminos:
-                            if termino in line:
-                                if filepath not in referencias_encontradas:
-                                    referencias_encontradas[filepath] = []
-                                referencias_encontradas[filepath].append((i, line.strip()))
+def inspeccionar_usuario(username):
+    """
+    Verifica si un usuario existe en la tabla `users` y muestra sus detalles.
+    :param username: El nombre de usuario a buscar.
+    """
+    try:
+        # Conectarse a la base de datos
+        db_path = get_users_db_path()
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
 
-    return referencias_encontradas
+        # Consultar el usuario
+        c.execute("SELECT id, username, password, role, last_login FROM users WHERE username = ?", (username,))
+        user = c.fetchone()
 
+        if user:
+            print(f"Detalles del usuario '{username}':")
+            print(f"ID: {user[0]}")
+            print(f"Username: {user[1]}")
+            print(f"Password (hash): {user[2]}")
+            print(f"Role: {user[3]}")
+            print(f"Last Login: {user[4]}")
+        else:
+            print(f"El usuario '{username}' no existe en la tabla 'users'.")
 
-if __name__ == '__main__':
-    # Términos a buscar
-    terminos_a_buscar = ['employees', 'c.execute', 'employee', 'users']
-    
-    # Directorio base del proyecto
-    directorio_base = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-    
-    # Buscar referencias
-    resultados = buscar_referencias_en_archivos(terminos_a_buscar, directorio_base)
-    
-    # Mostrar resultados
-    if resultados:
-        print("Referencias encontradas:")
-        for archivo, referencias in resultados.items():
-            print(f"\n{archivo}:")
-            for linea, contenido in referencias:
-                print(f"  Línea {linea}: {contenido}")
-    else:
-        print("No se encontraron referencias.")
+    except sqlite3.Error as e:
+        print(f"Error al consultar la base de datos: {e}")
+    finally:
+        conn.close()
+
+if __name__ == "__main__":
+    # Preguntar al usuario qué acción realizar
+    print("Inspección de usuario en la base de datos 'users.db'")
+    usuario = input("Ingrese el nombre de usuario a inspeccionar: ").strip()
+    inspeccionar_usuario(usuario)
+
+def actualizar_password(username, new_password):
+    """
+    Actualiza la contraseña de un usuario en la base de datos.
+    :param username: El nombre de usuario a actualizar.
+    :param new_password: La nueva contraseña en texto plano.
+    """
+    try:
+        db_path = get_users_db_path()
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
+
+        # Generar el hash de la nueva contraseña
+        hashed_password = generate_password_hash(new_password)
+
+        # Actualizar la contraseña en la base de datos
+        c.execute("UPDATE users SET password = ? WHERE username = ?", (hashed_password, username))
+        conn.commit()
+
+        print(f"Contraseña para el usuario '{username}' actualizada exitosamente.")
+    except sqlite3.Error as e:
+        print(f"Error al actualizar la contraseña: {e}")
+    finally:
+        conn.close()
+
+if __name__ == "__main__":
+    print("Actualizar contraseña de usuario en 'users.db'")
+    usuario = input("Ingrese el nombre de usuario a actualizar: ").strip()
+    nueva_password = input(f"Ingrese la nueva contraseña para '{usuario}': ").strip()
+    actualizar_password(usuario, nueva_password)

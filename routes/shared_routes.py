@@ -44,26 +44,28 @@ def index():
 # Ruta para el inicio de sesión
 @shared_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    # Si ya hay una sesión activa, redirigir al dashboard correspondiente
     if session.get('user_id'):
-        # Verificar el rol en la sesión y redirigir según corresponda
-        if session['role'] == 'admin':
+        role = session.get('role')
+        if role == 'admin':
             return redirect(routes_map['admin_manage_employees']())
-        elif session['role'] == 'employee':
+        elif role == 'employee':
             return redirect(routes_map['employee_dashboard']())
         else:
-            # Si el rol no es válido, cerrar la sesión por seguridad
+            # Si el rol no es válido, limpiar sesión y redirigir al login
             session.clear()
-            return redirect(routes_map['shared_login']())
+            return render_template('login.html', error_message="Ungültige Sitzung. Bitte erneut anmelden.")
 
     if request.method == 'POST':
         username = request.form['username'].strip()
         password = request.form['password']
 
         try:
+            # Conectar a la base de datos
             conn = sqlite3.connect(get_users_db_path())
             c = conn.cursor()
 
-            # Consultar la base de datos para verificar las credenciales
+            # Consultar la base de datos para obtener el usuario
             c.execute('SELECT id, password, role FROM users WHERE username = ?', (username,))
             user = c.fetchone()
             conn.close()
@@ -71,23 +73,27 @@ def login():
             if user:
                 user_id, hashed_password, role = user
                 if check_password_hash(hashed_password, password):
-                    # Iniciar sesión y asignar el rol
+                    # Almacenar información de sesión y establecerla como permanente
                     session['user_id'] = user_id
                     session['role'] = role
+                    session.permanent = True
 
-                    # Redirigir según el rol
+                    # Redirigir al dashboard según el rol
                     if role == 'admin':
                         return redirect(routes_map['admin_manage_employees']())
                     elif role == 'employee':
                         return redirect(routes_map['employee_dashboard']())
                     else:
+                        # Si el rol no es reconocido
+                        session.clear()
                         return render_template('login.html', error_message="Unbekannte Benutzerrolle.")
                 else:
                     return render_template('login.html', error_message="Ungültiges Passwort.")
             else:
                 return render_template('login.html', error_message="Benutzername existiert nicht.")
+
         except sqlite3.Error as e:
-            return f"Datenbankfehler: {e}", 500
+            return render_template('login.html', error_message=f"Datenbankfehler: {e}")
 
     return render_template('login.html')
 

@@ -5,29 +5,50 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>RMA-Berichte</h1>
-    <p>Zusammenfassung der aktuellen RMA-Aktivitäten:</p>
+    <h1 style="text-align: center;">RMA-Berichte</h1>
+    <p style="text-align: center;">Zusammenfassung der aktuellen RMA-Aktivitäten:</p>
 
-    <table>
+    <!-- Tabla de reportes -->
+    <table class="stats-table center" style="width: 50%; margin: auto;">
         <thead>
             <tr>
-                <th>Status</th>
-                <th>Anzahl</th>
+                <th>ID</th>
+                <th>Serie</th>
+                <th>Aktionen</th>
             </tr>
         </thead>
         <tbody>
-            {% for status, count in report_data.items() %}
-                <tr>
-                    <td>{{ status }}</td>
-                    <td>{{ count }}</td>
-                </tr>
+            {% for rma in rmas %}
+            <tr>
+                <td>{{ rma.id }}</td>
+                <td>{{ rma.seriennummer }}</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
+    
+    <!-- Botones de acción -->
+    <tbody>
+        {% for rma in rmas %}
+        <tr>
+            <td>{{ rma.id }}</td>
+            <td>{{ rma.seriennummer }}</td>
+            <td>
+                <a href="{{ routes_map['create_report'](rma.id) }}">
+                    <button type="button" class="form-button">📝 Neuen Bericht erstellen</button>
+                </a>
+                <a href="{{ routes_map['view_reports'](rma.id) }}">
+                    <button type="button" class="form-button">📄 Berichte ansehen</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>    
 
-    <div>
-        <a href="/employee_dashboard">
-            <button type="button">Zurück zum Mitarbeiterportal</button>
+    <!-- Botón para volver al Dashboard -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ routes_map['employee_dashboard']() }}">
+            <button type="button" class="form-button">⬅️ Zurück zum Dashboard</button>
         </a>
     </div>
 </body>

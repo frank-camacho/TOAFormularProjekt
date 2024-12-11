@@ -1,24 +1,30 @@
 from flask import Flask
 from flask_session import Session
-from routes import register_routes
-from utils.routes_map import routes_map
 from datetime import timedelta
+from flask_extensions import mail
+from routes import register_routes
 
 # Inicializar la aplicación Flask
 app = Flask(__name__)
 
-# Configurar la clave secreta para manejar sesiones
-app.secret_key = 'tu-clave-super-secreta'  # Cambia esto por una clave segura y única
+# Configuración de correo
+app.config['MAIL_SERVER'] = 'smtp.example.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = 'your-email@example.com'
+app.config['MAIL_PASSWORD'] = 'your-password'
+app.config['MAIL_USE_TLS'] = True
 
 # Configuración de la sesión
-app.config['SESSION_TYPE'] = 'filesystem'  # Las sesiones se almacenan en el sistema de archivos
-app.config['SESSION_PERMANENT'] = True  # Las sesiones pueden ser permanentes
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)  # Tiempo de inactividad para logout automático
+app.secret_key = 'tu-clave-super-secreta'  # Cambia esto por una clave segura y única
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_PERMANENT'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
-# Inicializar Flask-Session
+# Inicializar extensiones
+mail.init_app(app)
 Session(app)
 
-# Registrar todas las rutas
+# Registrar las rutas
 register_routes(app)
 
 # Ejecutar la aplicación

@@ -9,6 +9,7 @@
 </head>
 <body>
     <h1 style="text-align: center;">Benutzerverwaltung</h1>
+    <p> </p>
 
     <!-- Botón para agregar nuevos usuarios -->
     {% if current_user.role == 'admin' %}
@@ -20,7 +21,7 @@
     {% endif %}
 
     <!-- Tabla de usuarios -->
-    <table id="usersTable" class="display" style="width: 80%; margin: 0 auto;">
+    <table id="usersTable" class="display" style="width: 50%; margin: 0 auto;">
         <thead>
             <tr>
                 <th>ID</th>
@@ -30,14 +31,14 @@
                 <th>Aktionen</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody style="text-align: center;">
             {% for user in users %}
             <tr>
                 <td>{{ user[0] }}</td>
                 <td>{{ user[1] }}</td>
                 <td>{{ user[2] }}</td>
                 <td>{{ user[3] }}</td>
-                <td>
+                <td style="text-align: center;">
                     <a href="{{ routes_map['admin_edit_employee'](user[0]) }}">
                         <button type="button">Bearbeiten</button>
                     </a>

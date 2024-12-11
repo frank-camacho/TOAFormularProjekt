@@ -19,13 +19,13 @@
         <a href="{{ routes_map['rma_new_rma']() }}">
             <button type="button" class="form-button">Neues RMA erstellen</button>
         </a>
-        <a href="{{ routes_map['rma_submit_rma']() }}">
+        <a href="{{ routes_map['employee_generate_report']() }}">
             <button type="button" class="form-button">Bericht generieren</button>
-        </a>
+        </a>        
     </div>
 
     <!-- Reparaturen Zusammenfassung -->
-    <table class="stats-table center" style="width: 80%; margin: auto;">
+    <table class="stats-table center" style="width: 60%; margin: auto;">
         <thead>
             <tr>
                 <th colspan="6" style="text-align: center;">Reparaturen Zusammenfassung</th>
@@ -102,7 +102,7 @@
 
     <!-- Botón de Logout -->
     {% if current_user %}
-    <div style="text-align: right; margin: 10px;">
+    <div style="text-align: center; margin: 10px;">
         <a href="{{ routes_map['shared_logout']() }}">
             <button type="button" class="form-button">Abmelden</button>
         </a>

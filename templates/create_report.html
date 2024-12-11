@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Bericht erstellen</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1 style="text-align: center;">Bericht erstellen</h1>
+
+    <!-- Notificaciones de éxito o error -->
+    {% if message %}
+    <div style="text-align: center; color: green; margin-bottom: 10px;">
+        {{ message }}
+    </div>
+    {% elif error_message %}
+    <div style="text-align: center; color: red; margin-bottom: 10px;">
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    <!-- Formulario para crear el reporte -->
+    <form action="{{ routes_map['employee_create_report']() }}" method="POST" class="rma-form">
+        <div class="form-group">
+            <label for="report_type">Berichttyp</label>
+            <select id="report_type" name="report_type" class="form-select" required>
+                <option value="workshop">Werkstatt-Bericht</option>
+                <option value="accounting">Bericht für die Buchhaltung</option>
+                <option value="client">Bericht für den Kunden</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="comments">Zusätzliche Kommentare</label>
+            <textarea id="comments" name="comments" class="form-textarea" 
+                      placeholder="Fügen Sie zusätzliche Informationen hinzu (optional)" rows="5"></textarea>
+        </div>
+        <div style="text-align: center;">
+            <button type="submit" class="form-button">Bericht erstellen</button>
+        </div>
+    </form>
+
+    <!-- Botones de navegación -->
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="{{ routes_map['employee_dashboard']() }}">
+            <button type="button" class="form-button">Zurück zum Dashboard</button>
+        </a>
+        <a href="{{ routes_map['shared_logout']() }}">
+            <button type="button" class="form-button">Abmelden</button>
+        </a>
+    </div>
+</body>
+</html>

@@ -2,11 +2,21 @@
 <html lang="de">
 <head>
     <title>Neues RMA Erstellen</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1 style="text-align: center;">Neues RMA Erstellen</h1>
 
+    <!-- Botón para volver al Dashboard -->
+    <div style="margin: 10px 0; text-align: center;">
+        <a href="{{ routes_map['employee_dashboard']() }}">
+            <button type="button" class="form-button">⬅️ Zurück zum Dashboard</button>
+        </a>
+    </div>
+
+    <!-- Formulario para crear un nuevo RMA -->
     <form action="{{ routes_map['rma_new_rma']() }}" method="POST" class="rma-form">
         {% for field in fields %}
         <div class="form-group">
@@ -34,7 +44,18 @@
         </div>
         {% endfor %}
 
-        <button type="submit" class="form-button">RMA Erstellen</button>
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit" class="form-button">RMA Erstellen</button>
+        </div>
     </form>
+
+    <!-- Botón de Logout -->
+    {% if current_user %}
+    <div style="text-align: center; margin: 10px;">
+        <a href="{{ routes_map['shared_logout']() }}">
+            <button type="button" class="form-button">Abmelden</button>
+        </a>
+    </div>
+    {% endif %}
 </body>
 </html>

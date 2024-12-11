@@ -1,6 +1,9 @@
 # routes/employee_routes.py
 
-from flask import Blueprint, render_template, request, redirect, g
+from flask import Blueprint, render_template, request, redirect, session, g
+from reportlab.pdfgen import canvas
+from flask_mail import Message
+from flask_extensions import mail
 import sqlite3
 from utils.db_utils import get_db_path
 from utils.routes_map import routes_map
@@ -9,11 +12,14 @@ from employee_fields import EMPLOYEE_FIELDS
 # Crear un blueprint para las rutas de empleados
 employee_bp = Blueprint('employee', __name__, url_prefix='/employee')
 
+# Middleware para verificar si el usuario es empleado
+@employee_bp.before_request
+def employee_required():
+    if not session.get('user_id') or session.get('role') != 'employee':
+        return redirect(routes_map['shared_login']())
+
 @employee_bp.route('/dashboard', methods=['GET'])
 def employee_dashboard():
-    if not g.current_user or g.current_user['role'] != 'employee':
-        return redirect(routes_map['login']())
-
     try:
         conn = sqlite3.connect(get_db_path())
         c = conn.cursor()
@@ -51,9 +57,6 @@ def employee_dashboard():
 
 @employee_bp.route('/new_requests', methods=['GET'])
 def new_requests():
-    if not g.current_user or g.current_user['role'] != 'employee':
-        return redirect(routes_map['login']())
-
     try:
         conn = sqlite3.connect(get_db_path())
         c = conn.cursor()
@@ -74,9 +77,6 @@ def new_requests():
 
 @employee_bp.route('/edit_data/<int:rma_id>', methods=['GET', 'POST'])
 def edit_data(rma_id):
-    if not g.current_user or g.current_user['role'] != 'employee':
-        return redirect(routes_map['login']())
-
     try:
         conn = sqlite3.connect(get_db_path())
         c = conn.cursor()
@@ -117,9 +117,6 @@ def edit_data(rma_id):
 
 @employee_bp.route('/update_status', methods=['POST'])
 def update_status():
-    if not g.current_user or g.current_user['role'] != 'employee':
-        return redirect(routes_map['login']())
-
     try:
         rma_id = request.form['id']
         new_status = request.form['status']
@@ -132,5 +129,164 @@ def update_status():
         return redirect(routes_map['employee_dashboard']())
     except sqlite3.Error as e:
         return f"Error al actualizar el estado: {e}", 500
+    finally:
+        conn.close()
+
+@employee_bp.route('/generate_report', methods=['GET'])
+def generate_report():
+    if not g.current_user or g.current_user['role'] != 'employee':
+        return redirect(routes_map['login']())
+
+    try:
+        conn = sqlite3.connect(get_db_path())
+        c = conn.cursor()
+
+        # Obtener el conteo de RMAs por estado
+        c.execute('SELECT status, COUNT(*) FROM rma_requests GROUP BY status')
+        report_data = {row[0]: row[1] for row in c.fetchall()}
+
+        # Obtener la lista de RMAs
+        c.execute('SELECT id, seriennummer FROM rma_requests')
+        rmas = [{"id": row[0], "seriennummer": row[1]} for row in c.fetchall()]
+
+        return render_template('report.html', report_data=report_data, rmas=rmas)
+    except sqlite3.Error as e:
+        return f"Fehler bei der Berichterstellung: {e}", 500
+    finally:
+        conn.close()
+
+@employee_bp.route('/view_reports/<int:rma_id>', methods=['GET'])
+def view_reports(rma_id):
+    if not g.current_user or g.current_user['role'] != 'employee':
+        return redirect(routes_map['login']())
+
+    try:
+        conn = sqlite3.connect("workshop_reports.db")
+        c = conn.cursor()
+        c.execute('SELECT * FROM workshop_reports WHERE rma_id = ?', (rma_id,))
+        reports = [{"id": row[0], "comments": row[1], "cost": row[2]} for row in c.fetchall()]
+        return render_template('view_reports.html', reports=reports, rma_id=rma_id)
+    except sqlite3.Error as e:
+        return f"Error al obtener los reportes: {e}", 500
+    finally:
+        conn.close()
+
+# Crear solicitud
+@employee_bp.route('/create_rma', methods=['GET', 'POST'])
+def create_rma():
+    if not g.current_user or g.current_user['role'] != 'employee':
+        return redirect(routes_map['login']())
+
+    if request.method == 'POST':
+        data = {field['name']: request.form.get(field['name'], '') for field in EMPLOYEE_FIELDS}
+        try:
+            conn = sqlite3.connect(get_db_path())
+            c = conn.cursor()
+            c.execute('''
+            INSERT INTO rma_requests (kundennummer, modell, seriennummer, name, adresse, plz, telefon, email, anmeldedatum, fehlbeschreibung, reparaturkosten, status, assigned_taller)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                data.get('kundennummer'), data.get('modell'), data.get('seriennummer'), data.get('name'),
+                data.get('adresse'), data.get('plz'), data.get('telefon'), data.get('email'),
+                data.get('anmeldedatum'), data.get('fehlbeschreibung'), float(data.get('reparaturkosten', 0)),
+                'Neu', g.current_user.get('username')
+            ))
+            conn.commit()
+            return redirect(routes_map['employee_dashboard']())
+        except sqlite3.Error as e:
+            return f"Error al crear la solicitud: {e}", 500
+        finally:
+            conn.close()
+
+    return render_template('create_rma.html', fields=EMPLOYEE_FIELDS)
+
+# El resto de las rutas (editar, eliminar) serían similares a las ya existentes.
+
+@employee_bp.route('/create_report/<int:rma_id>', methods=['GET', 'POST'])
+def create_report(rma_id):
+    if not g.current_user or g.current_user['role'] != 'employee':
+        return redirect(routes_map['login']())
+
+    if request.method == 'POST':
+        comments = request.form['comments']
+        cost = float(request.form['cost'])
+
+        try:
+            conn = sqlite3.connect("workshop_reports.db")
+            c = conn.cursor()
+            c.execute('''
+            INSERT INTO workshop_reports (rma_id, comments, cost)
+            VALUES (?, ?, ?)
+            ''', (rma_id, comments, cost))
+            conn.commit()
+            return redirect(routes_map['employee_dashboard']())
+        except sqlite3.Error as e:
+            return f"Error al crear el reporte: {e}", 500
+        finally:
+            conn.close()
+
+    return render_template('create_report.html', rma_id=rma_id)
+
+@employee_bp.route('/generate_accounting_report/<int:rma_id>')
+def generate_accounting_report(rma_id):
+    try:
+        conn = sqlite3.connect(get_db_path())
+        c = conn.cursor()
+        c.execute('''
+        SELECT seriennummer, anmeldedatum, reparaturkosten FROM rma_requests WHERE id = ?
+        ''', (rma_id,))
+        rma_data = c.fetchone()
+
+        if not rma_data:
+            return "RMA no encontrado", 404
+
+        seriennummer, anmeldedatum, reparaturkosten = rma_data
+
+        # Generar PDF
+        pdf_path = f"static/reports/accounting_report_{rma_id}.pdf"
+        pdf = canvas.Canvas(pdf_path)
+        pdf.drawString(100, 750, f"RMA #{rma_id} - Reporte de Contabilidad")
+        pdf.drawString(100, 730, f"Serie: {seriennummer}")
+        pdf.drawString(100, 710, f"Fecha de Ingreso: {anmeldedatum}")
+        pdf.drawString(100, 690, f"Costo: {reparaturkosten} EUR")
+        pdf.save()
+
+        return f"Reporte generado en: {pdf_path}"
+    except sqlite3.Error as e:
+        return f"Error al generar el reporte: {e}", 500
+    finally:
+        conn.close()
+
+@employee_bp.route('/send_client_report/<int:rma_id>')
+def send_client_report(rma_id):
+    try:
+        conn = sqlite3.connect(get_db_path())
+        c = conn.cursor()
+        c.execute('''
+        SELECT seriennummer, anmeldedatum, reparaturkosten, email, comments FROM rma_requests
+        LEFT JOIN workshop_reports ON rma_requests.id = workshop_reports.rma_id
+        WHERE rma_requests.id = ?
+        ''', (rma_id,))
+        report_data = c.fetchone()
+
+        if not report_data:
+            return "Datos no encontrados", 404
+
+        seriennummer, anmeldedatum, reparaturkosten, email, comments = report_data
+
+        # Enviar correo
+        msg = Message(f"Reporte RMA #{rma_id}", sender="your-email@example.com", recipients=[email])
+        msg.body = f"""
+        RMA #{rma_id} - Detalles:
+        Serie: {seriennummer}
+        Fecha de Ingreso: {anmeldedatum}
+        Costo: {reparaturkosten} EUR
+        Comentarios: {comments}
+        """
+        mail.send(msg)
+
+        return "Reporte enviado al cliente."
+    except sqlite3.Error as e:
+        return f"Error al enviar el reporte: {e}", 500
     finally:
         conn.close()
