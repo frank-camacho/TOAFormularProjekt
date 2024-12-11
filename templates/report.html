@@ -12,38 +12,28 @@
     <table class="stats-table center" style="width: 50%; margin: auto;">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Serie</th>
-                <th>Aktionen</th>
+                <th style="text-align: center;">ID</th>
+                <th style="text-align: center;">Seriennummer</th>
+                <th style="text-align: center;">Aktionen</th>
             </tr>
         </thead>
         <tbody>
             {% for rma in rmas %}
             <tr>
-                <td>{{ rma.id }}</td>
-                <td>{{ rma.seriennummer }}</td>
+                <td style="text-align: center;">{{ rma.id }}</td>
+                <td style="text-align: center;">{{ rma.seriennummer }}</td>
+                <td style="width: 50%; margin: auto; text-align: center;">
+                    <a href="{{ routes_map['employee_create_report'](rma.id) }}">
+                        <button type="button" class="form-button">📝 Neuen Bericht erstellen</button>
+                    </a>                    
+                    <a href="{{ routes_map['employee_view_reports'](rma.id) }}">
+                        <button type="button" class="form-button">📄 Berichte ansehen</button>
+                    </a>                    
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    
-    <!-- Botones de acción -->
-    <tbody>
-        {% for rma in rmas %}
-        <tr>
-            <td>{{ rma.id }}</td>
-            <td>{{ rma.seriennummer }}</td>
-            <td>
-                <a href="{{ routes_map['create_report'](rma.id) }}">
-                    <button type="button" class="form-button">📝 Neuen Bericht erstellen</button>
-                </a>
-                <a href="{{ routes_map['view_reports'](rma.id) }}">
-                    <button type="button" class="form-button">📄 Berichte ansehen</button>
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>    
 
     <!-- Botón para volver al Dashboard -->
     <div style="text-align: center; margin-top: 20px;">

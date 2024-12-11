@@ -22,8 +22,8 @@ routes_map = {
     'employee_edit_data': lambda rma_id: url_for('employee.edit_data', rma_id=rma_id),
     'employee_update_status': lambda: url_for('employee.update_status'),
     'employee_generate_report': lambda: url_for('employee.generate_report'),
-    'create_report': lambda rma_id: url_for('employee.create_report', rma_id=rma_id),
-    'view_reports': lambda rma_id: url_for('employee.view_reports', rma_id=rma_id),
+    'employee_create_report': lambda rma_id: url_for('employee.create_report', rma_id=rma_id),
+    'employee_view_reports': lambda rma_id: url_for('employee.view_reports', rma_id=rma_id),  # Cambiado nombre clave
 
     # Rutas de RMA
     'rma_submit_rma': lambda: url_for('rma.submit_rma'),

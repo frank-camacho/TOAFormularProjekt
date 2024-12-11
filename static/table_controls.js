@@ -1,12 +1,40 @@
-// Filtro de búsqueda
 document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('searchInput');
-    const table = document.getElementById('tabla_resultados');
+    // Función para inicializar DataTables
+    window.initializeTable = function (tableId) {
+        const table = document.getElementById(tableId);
+        if (table) {
+            try {
+                console.log(`Inicializando DataTables para la tabla: ${tableId}...`);
+                $(table).DataTable({
+                    autoWidth: true,
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+                    lengthMenu: [5, 10, 25, 50],
+                    language: {
+                        url: "/static/german.json"
+                    },
+                    columnDefs: [
+                        { targets: '_all', defaultContent: 'N/A' } // Manejar celdas vacías
+                    ]
+                });
+                console.log(`✅ DataTables inicializado correctamente para: ${tableId}`);
+            } catch (error) {
+                console.error(`❌ Error al inicializar DataTables para ${tableId}:`, error);
+            }
+        } else {
+            console.warn(`⚠️ Tabla con ID ${tableId} no encontrada para inicializar DataTables.`);
+        }
+    };
 
-    if (searchInput && table) {
+    // Filtro de búsqueda para tablas simples
+    const searchInput = document.getElementById('searchInput');
+    const simpleTable = document.getElementById('simpleTable'); // Tabla específica sin DataTables
+
+    if (searchInput && simpleTable) {
         searchInput.addEventListener('keyup', function () {
             const filter = this.value.toLowerCase();
-            const rows = table.querySelectorAll('tbody tr');
+            const rows = simpleTable.querySelectorAll('tbody tr');
             rows.forEach(row => {
                 const cells = Array.from(row.getElementsByTagName('td'));
                 const match = cells.some(cell => cell.textContent.toLowerCase().includes(filter));
@@ -15,8 +43,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Ordenamiento por columna
-    window.sortTable = function (columnIndex) {
+    // Ordenamiento por columna para tablas simples
+    window.sortTable = function (tableId, columnIndex) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+
         const rows = Array.from(table.rows).slice(1); // Excluir la fila de encabezado
         const sortedRows = rows.sort((a, b) => {
             const aText = a.cells[columnIndex].textContent.trim();
@@ -28,11 +59,14 @@ document.addEventListener('DOMContentLoaded', function () {
         table.tBodies[0].append(...sortedRows);
     };
 
-    // Paginación
+    // Paginación para tablas simples
     const rowsPerPage = 10;
     let currentPage = 1;
 
-    function paginate() {
+    function paginate(tableId) {
+        const table = document.getElementById(tableId);
+        if (!table) return;
+
         const rows = Array.from(table.rows).slice(1); // Excluir encabezado
         const totalPages = Math.ceil(rows.length / rowsPerPage);
 
@@ -40,7 +74,9 @@ document.addEventListener('DOMContentLoaded', function () {
             row.style.display = index >= (currentPage - 1) * rowsPerPage && index < currentPage * rowsPerPage ? '' : 'none';
         });
 
-        const pagination = document.getElementById('pagination');
+        const pagination = document.getElementById(`${tableId}-pagination`);
+        if (!pagination) return;
+
         pagination.innerHTML = '';
         for (let i = 1; i <= totalPages; i++) {
             const button = document.createElement('button');
@@ -48,11 +84,15 @@ document.addEventListener('DOMContentLoaded', function () {
             button.classList.toggle('active', i === currentPage);
             button.addEventListener('click', () => {
                 currentPage = i;
-                paginate();
+                paginate(tableId);
             });
             pagination.appendChild(button);
         }
     }
 
-    paginate();
+    // Inicializar DataTables y tablas simples
+    const dataTables = document.querySelectorAll('.datatable'); // Clases de tablas para DataTables
+    dataTables.forEach(table => initializeTable(table.id));
+
+    paginate('simpleTable'); // Solo para tablas simples
 });

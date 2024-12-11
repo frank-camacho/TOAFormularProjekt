@@ -21,7 +21,7 @@
     {% endif %}
 
     <!-- Formulario para crear el reporte -->
-    <form action="{{ routes_map['employee_create_report']() }}" method="POST" class="rma-form">
+    <form action="{{ routes_map['employee_create_report'](rma_id) }}" method="POST" class="rma-form">
         <div class="form-group">
             <label for="report_type">Berichttyp</label>
             <select id="report_type" name="report_type" class="form-select" required>
@@ -35,10 +35,16 @@
             <textarea id="comments" name="comments" class="form-textarea" 
                       placeholder="Fügen Sie zusätzliche Informationen hinzu (optional)" rows="5"></textarea>
         </div>
+        <div class="form-group">
+            <label for="cost">Kosten</label>
+            <input type="number" id="cost" name="cost" class="form-input" 
+                   placeholder="Kosten in EUR" step="0.01" required>
+        </div>
         <div style="text-align: center;">
             <button type="submit" class="form-button">Bericht erstellen</button>
         </div>
     </form>
+    
 
     <!-- Botones de navegación -->
     <div style="margin-top: 20px; text-align: center;">

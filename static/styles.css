@@ -1,4 +1,6 @@
-/* General */
+/* ==========================
+   General
+========================== */
 body {
     font-family: Arial, sans-serif;
     font-size: 12px;
@@ -6,7 +8,7 @@ body {
     background-color: #f4f4f9;
 }
 
-.center{
+.center {
     margin-left: auto;
     margin-right: auto;
 }
@@ -17,7 +19,9 @@ h1 {
     text-align: center;
 }
 
-/* Estilos generales de tablas */
+/* ==========================
+   Tablas
+========================== */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -27,7 +31,6 @@ table {
     text-align: left;
 }
 
-/* Encabezados de tabla */
 th {
     background-color: #4CAF50;
     color: white;
@@ -37,7 +40,6 @@ th {
     border: 1px solid #ddd;
 }
 
-/* Filas y celdas */
 td {
     padding: 8px;
     border: 1px solid #ddd;
@@ -47,20 +49,21 @@ tr:hover {
     background-color: #f9f9f9;
 }
 
-/* Tabla de estadísticas */
+/* ==========================
+   Estadísticas y Gráficos
+========================== */
 .stats-table {
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     border: 1px solid #ccc;
 }
 
-.stats-table th, .stats-table td {
+.stats-table th,
+.stats-table td {
     text-align: left;
     padding: 10px;
 }
 
-/* Contenedor de tabla y gráfico */
 .table-graph-container {
     display: flex;
     justify-content: space-between;
@@ -68,16 +71,14 @@ tr:hover {
     gap: 20px;
 }
 
-.table-graph-container .stats-table {
-    flex: 1;
-}
-
 .table-graph-container canvas {
     flex: 1;
     max-width: 100%;
 }
 
-/* Formularios */
+/* ==========================
+   Formularios
+========================== */
 .rma-form {
     max-width: 40%;
     margin: 0 auto;
@@ -106,16 +107,19 @@ tr:hover {
 .form-select {
     width: 90%;
     padding: 8px;
-    border: 0px solid #ccc;
+    border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
     text-align: center;
-    opacity: 40%;
 }
 
-.form-button {
+/* ==========================
+   Botones
+========================== */
+.form-button,
+.menu-button,
+.settings-button button {
     padding: 10px;
     background-color: #4CAF50;
     color: white;
@@ -124,38 +128,69 @@ tr:hover {
     cursor: pointer;
     font-size: 12px;
     text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-
+    margin: auto;
+    transition: background-color 0.3s ease;
 }
 
-.form-button:hover {
+.form-button:hover,
+.menu-button:hover,
+.settings-button button:hover {
     background-color: #45a049;
 }
-/* Contenedor de menú */
+
+/* ==========================
+   Pestañas
+========================== */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.tabs button {
+    background-color: #e0e0e0;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.tabs button.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.tabs button:hover {
+    background-color: #d4d4d4;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ==========================
+   Menús y Configuración
+========================== */
 .menu-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px; /* Espaciado entre los botones */
+    gap: 20px;
     margin-top: 30px;
 }
 
-/* Botones del menú */
-.menu-button {
-    font-size: 16px;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 250px;
-    text-align: center;
-}
-
-.menu-button:hover {
-    background-color: #45a049;
+.settings-button {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 }

@@ -21,39 +21,48 @@ def employee_required():
 @employee_bp.route('/dashboard', methods=['GET'])
 def employee_dashboard():
     try:
+        # Conexión a la base de datos
         conn = sqlite3.connect(get_db_path())
+        conn.row_factory = sqlite3.Row  # Permitir acceso a columnas por nombre
         c = conn.cursor()
 
         # Obtener los primeros 5 registros con estado "Neu"
-        c.execute("SELECT id, modell, name, status, assigned_taller FROM rma_requests WHERE status = 'Neu' LIMIT 5")
-        requests = [
-            {"id": row[0], "modell": row[1], "name": row[2], "status": row[3], "assigned_taller": row[4]}
-            for row in c.fetchall()
-        ]
+        c.execute("""
+            SELECT id, modell, name, status, assigned_taller, timestamp 
+            FROM rma_requests 
+            WHERE status = 'Neu' 
+            ORDER BY timestamp DESC 
+            LIMIT 5
+        """)
+        requests = [dict(row) for row in c.fetchall()]
 
-        # Calcular estadísticas básicas
-        c.execute("SELECT COUNT(*) FROM rma_requests")
-        total_rmas = c.fetchone()[0]
-        c.execute("SELECT COUNT(*) FROM rma_requests WHERE status = 'Neu'")
-        new = c.fetchone()[0]
-        c.execute("SELECT COUNT(*) FROM rma_requests WHERE status = 'In Arbeit'")
-        in_progress = c.fetchone()[0]
-        c.execute("SELECT COUNT(*) FROM rma_requests WHERE status = 'Abgeschlossen'")
-        completed = c.fetchone()[0]
+        # Calcular estadísticas básicas con una sola consulta
+        c.execute("""
+            SELECT 
+                COUNT(*) AS total_rmas,
+                SUM(CASE WHEN status = 'Neu' THEN 1 ELSE 0 END) AS new,
+                SUM(CASE WHEN status = 'In Arbeit' THEN 1 ELSE 0 END) AS in_progress,
+                SUM(CASE WHEN status = 'Abgeschlossen' THEN 1 ELSE 0 END) AS completed
+            FROM rma_requests
+        """)
+        stats = dict(c.fetchone())
 
-        stats = {
-            "total_rmas": total_rmas,
-            "new": new,
-            "in_progress": in_progress,
-            "completed": completed,
-        }
+        # Obtener todos los RMAs para la pestaña "Alle RMAs"
+        c.execute("""
+            SELECT id, modell, name, status, assigned_taller, timestamp 
+            FROM rma_requests
+            ORDER BY timestamp DESC
+        """)
+        rmas = [dict(row) for row in c.fetchall()]
 
-        return render_template('employee_dashboard.html', requests=requests, stats=stats)
+        return render_template('employee_dashboard.html', requests=requests, stats=stats, rmas=rmas)
 
     except sqlite3.Error as e:
         return f"Error al acceder a la base de datos: {e}", 500
+
     finally:
-        conn.close()
+        if 'conn' in locals():
+            conn.close()
 
 @employee_bp.route('/new_requests', methods=['GET'])
 def new_requests():
@@ -141,13 +150,13 @@ def generate_report():
         conn = sqlite3.connect(get_db_path())
         c = conn.cursor()
 
+        # Obtener los datos de los RMAs
+        c.execute('SELECT id, seriennummer FROM rma_requests')
+        rmas = [{"id": row[0], "seriennummer": row[1]} for row in c.fetchall()]
+
         # Obtener el conteo de RMAs por estado
         c.execute('SELECT status, COUNT(*) FROM rma_requests GROUP BY status')
         report_data = {row[0]: row[1] for row in c.fetchall()}
-
-        # Obtener la lista de RMAs
-        c.execute('SELECT id, seriennummer FROM rma_requests')
-        rmas = [{"id": row[0], "seriennummer": row[1]} for row in c.fetchall()]
 
         return render_template('report.html', report_data=report_data, rmas=rmas)
     except sqlite3.Error as e:
@@ -161,15 +170,42 @@ def view_reports(rma_id):
         return redirect(routes_map['login']())
 
     try:
-        conn = sqlite3.connect("workshop_reports.db")
-        c = conn.cursor()
-        c.execute('SELECT * FROM workshop_reports WHERE rma_id = ?', (rma_id,))
-        reports = [{"id": row[0], "comments": row[1], "cost": row[2]} for row in c.fetchall()]
-        return render_template('view_reports.html', reports=reports, rma_id=rma_id)
+        # Conectar a la base de datos de RMA
+        conn_rma = sqlite3.connect(get_db_path())  # Asegúrate de que apunta a `rma.db`
+        c_rma = conn_rma.cursor()
+
+        # Obtener datos del RMA
+        c_rma.execute('SELECT id, seriennummer, status, fehlbeschreibung, reparaturkosten FROM rma_requests WHERE id = ?', (rma_id,))
+        rma_data = c_rma.fetchone()
+        conn_rma.close()
+
+        if not rma_data:
+            return "Keine Daten für diese RMA gefunden.", 404
+
+        rma = {
+            "id": rma_data[0],
+            "seriennummer": rma_data[1],
+            "status": rma_data[2],
+            "fehlbeschreibung": rma_data[3],
+            "reparaturkosten": rma_data[4],
+        }
+
+        # Conectar a la base de datos de reportes
+        conn_reports = sqlite3.connect("workshop_reports.db")  # Ruta correcta de tu base de datos de reportes
+        c_reports = conn_reports.cursor()
+
+        # Obtener todos los reportes asociados al RMA
+        c_reports.execute('SELECT id, comments, cost FROM workshop_reports WHERE rma_id = ?', (rma_id,))
+        reports_data = c_reports.fetchall()
+        conn_reports.close()
+
+        # Estructurar los datos de los reportes
+        reports = [{"id": row[0], "comments": row[1], "cost": row[2]} for row in reports_data]
+
+        # Pasar los datos a la plantilla
+        return render_template('view_reports.html', rma=rma, reports=reports)
     except sqlite3.Error as e:
-        return f"Error al obtener los reportes: {e}", 500
-    finally:
-        conn.close()
+        return f"Fehler bei der Abfrage: {e}", 500
 
 # Crear solicitud
 @employee_bp.route('/create_rma', methods=['GET', 'POST'])

@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <title>Berichte ansehen</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <title>RMA- und Berichte</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1 style="text-align: center;">Berichte ansehen für RMA #{{ rma_id }}</h1>
-    <table class="stats-table center" style="width: 50%; margin: auto;">
+    <h1 style="text-align: center;">Details zur RMA #{{ rma.id }}</h1>
+
+    <!-- Información del RMA -->
+    <table class="stats-table center" style="width: 70%; margin: auto;">
+        <thead>
+            <tr>
+                <th>Serie</th>
+                <th>Status</th>
+                <th>Beschreibung</th>
+                <th>Kosten</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ rma.seriennummer }}</td>
+                <td>{{ rma.status }}</td>
+                <td>{{ rma.fehlbeschreibung }}</td>
+                <td>{{ rma.reparaturkosten }} EUR</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2 style="text-align: center; margin-top: 20px;">Berichte</h2>
+
+    <!-- Tabla de reportes -->
+    <table class="stats-table center" style="width: 70%; margin: auto;">
         <thead>
             <tr>
                 <th>ID</th>
@@ -19,11 +45,13 @@
             <tr>
                 <td>{{ report.id }}</td>
                 <td>{{ report.comments }}</td>
-                <td>{{ report.cost }}</td>
+                <td>{{ report.cost }} EUR</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Botón para volver -->
     <div style="text-align: center; margin-top: 20px;">
         <a href="{{ routes_map['employee_dashboard']() }}">
             <button type="button" class="form-button">⬅️ Zurück zum Dashboard</button>
