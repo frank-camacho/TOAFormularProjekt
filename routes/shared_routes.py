@@ -39,7 +39,18 @@ def inject_user():
 # Ruta para la página principal
 @shared_bp.route('/')
 def index():
-    return render_template('index.html')
+    """
+    Página principal del sistema.
+    Verifica si hay una sesión activa y muestra el estado correspondiente.
+    """
+    is_logged_in = 'user_id' in session  # Chequear si hay sesión activa
+    if is_logged_in:
+        # Si hay sesión activa, mostrar mensaje de bienvenida y botón de logout
+        username = session.get('username', 'Usuario')
+        return render_template('index.html', session_active=True, username=username)
+    else:
+        # Si no hay sesión activa, mostrar la página de bienvenida estándar
+        return render_template('index.html', session_active=False)
 
 # Ruta para el inicio de sesión
 @shared_bp.route('/login', methods=['GET', 'POST'])
@@ -76,6 +87,7 @@ def login():
                     # Almacenar información de sesión y establecerla como permanente
                     session['user_id'] = user_id
                     session['role'] = role
+                    session['username'] = username  # Almacenar el nombre de usuario en sesión
                     session.permanent = True
 
                     # Redirigir al dashboard según el rol

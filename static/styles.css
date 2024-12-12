@@ -75,6 +75,11 @@ tr:hover {
     flex: 1;
     max-width: 100%;
 }
+canvas#rmaChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
 
 /* ==========================
    Formularios

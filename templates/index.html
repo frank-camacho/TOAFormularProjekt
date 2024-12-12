@@ -10,6 +10,19 @@
 <body>
     <h1>Willkommen zum TOA Reparaturportal</h1>
 
+    {% if session_active %}
+    <!-- Aviso de Sesión Activa -->
+    <div id="session-notice" style="margin-top: 20px; width: 30%;" class="center">
+        <h2>Hallo, {{ username }}!</h2>
+        <p>Ihre Sitzung ist aktiv. Möchten Sie fortfahren oder sich abmelden?</p>
+        <a href="{{ routes_map['employee_dashboard']() }}">
+            <button type="button" class="form-button">Zum Dashboard</button>
+        </a>
+        <a href="{{ routes_map['shared_logout']() }}">
+            <button type="button" class="form-button">Abmelden</button>
+        </a>
+    </div>
+    {% else %}
     <!-- Opciones para Clientes -->
     <div id="cliente-menu" style="margin-top: 20px; width: 20%;" class="center">
         <table class="center">
@@ -43,6 +56,7 @@
             <button type="submit" class="form-button" style="text-align: center; width: 50%;">Anmelden</button>
         </form>
     </div>
+    {% endif %}
 
     <!-- Mensajes de error -->
     {% if error_message %}
