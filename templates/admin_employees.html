@@ -62,5 +62,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <!-- Botón de Logout -->
+    {% if current_user %}
+    <div class="logout-button" style="text-align: center;">
+        <a href="{{ routes_map['shared_logout']() }}">
+            <button type="button" style="text-align: center;">Abmelden</button>
+        </a>
+    </div>
+    {% endif %}
 </body>
 </html>
