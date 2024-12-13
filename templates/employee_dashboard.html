@@ -17,6 +17,13 @@
 <body>
     <h1 class="text-center">Willkommen im Mitarbeiter-Portal</h1>
     
+    <!-- Aviso de sesión activa -->
+    {% if session_active %}
+    <div class="session-alert">
+        <p>👋 Willkommen, {{ username }}! Ihre Sitzung ist aktiv.</p>
+    </div>
+    {% endif %}
+    
     <!-- Pestañas -->
     <div class="tabs">
         <button type="button" onclick="alert('Funktion noch nicht verfügbar.')">⚙️ Einstellungen</button>

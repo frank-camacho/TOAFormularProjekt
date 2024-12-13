@@ -1,6 +1,6 @@
 # routes/shared_routes.py
 
-from flask import Blueprint, render_template, session, redirect, g, request
+from flask import Blueprint, render_template, session, redirect, g, request, make_response
 from utils.routes_map import routes_map
 import sqlite3
 from werkzeug.security import check_password_hash
@@ -36,6 +36,17 @@ def inject_user():
         'routes_map': routes_map  # Inyectamos routes_map en el contexto de las plantillas
     }
 
+# Decorador para deshabilitar caché
+def no_cache(view):
+    """Decorador para deshabilitar caché en las respuestas."""
+    def no_cache_decorator(*args, **kwargs):
+        response = make_response(view(*args, **kwargs))
+        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
+        return response
+    return no_cache_decorator
+
 # Ruta para la página principal
 @shared_bp.route('/')
 def index():
@@ -43,14 +54,12 @@ def index():
     Página principal del sistema.
     Verifica si hay una sesión activa y muestra el estado correspondiente.
     """
-    is_logged_in = 'user_id' in session  # Chequear si hay sesión activa
-    if is_logged_in:
-        # Si hay sesión activa, mostrar mensaje de bienvenida y botón de logout
-        username = session.get('username', 'Usuario')
-        return render_template('index.html', session_active=True, username=username)
-    else:
-        # Si no hay sesión activa, mostrar la página de bienvenida estándar
-        return render_template('index.html', session_active=False)
+    session_active = 'user_id' in session  # Solo verdadero si hay sesión activa
+    username = session.get('username', None) if session_active else None
+
+    return render_template('index.html', session_active=session_active, username=username)
+
+
 
 # Ruta para el inicio de sesión
 @shared_bp.route('/login', methods=['GET', 'POST'])
@@ -63,7 +72,6 @@ def login():
         elif role == 'employee':
             return redirect(routes_map['employee_dashboard']())
         else:
-            # Si el rol no es válido, limpiar sesión y redirigir al login
             session.clear()
             return render_template('login.html', error_message="Ungültige Sitzung. Bitte erneut anmelden.")
 
@@ -84,19 +92,16 @@ def login():
             if user:
                 user_id, hashed_password, role = user
                 if check_password_hash(hashed_password, password):
-                    # Almacenar información de sesión y establecerla como permanente
                     session['user_id'] = user_id
                     session['role'] = role
                     session['username'] = username  # Almacenar el nombre de usuario en sesión
                     session.permanent = True
 
-                    # Redirigir al dashboard según el rol
                     if role == 'admin':
                         return redirect(routes_map['admin_manage_employees']())
                     elif role == 'employee':
                         return redirect(routes_map['employee_dashboard']())
                     else:
-                        # Si el rol no es reconocido
                         session.clear()
                         return render_template('login.html', error_message="Unbekannte Benutzerrolle.")
                 else:
