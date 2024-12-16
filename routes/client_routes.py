@@ -1,6 +1,4 @@
-# routes/client_routes.py
-
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, g
 import sqlite3
 from utils.db_utils import get_db_path
 from utils.routes_map import routes_map
@@ -77,3 +75,43 @@ def consulta():
         return f"Fehler bei der Datenbankabfrage: {e}", 500
     finally:
         conn.close()
+
+@client_bp.route('/client_dashboard', methods=['GET'])
+def client_dashboard():
+    """
+    Dashboard para mostrar las solicitudes de RMA de un cliente específico.
+    """
+    if g.current_user['role'] != 'client':
+        print("[ERROR] Acceso denegado al dashboard de clientes. El usuario no es un cliente.")
+        return redirect(routes_map['shared_login']())
+
+    kundennummer = g.current_user['username']
+    try:
+        with sqlite3.connect(get_db_path()) as conn:
+            c = conn.cursor()
+            # Consultar la vista `Client_View` para obtener los datos del cliente
+            c.execute("""
+                SELECT 
+                    RMA_ID, 
+                    Project_Reference, 
+                    Model, 
+                    Serial_Number, 
+                    Status, 
+                    Registration_Date, 
+                    Last_Workshop_Update, 
+                    Material_Availability_Status
+                FROM Client_View
+                WHERE Customer_ID = ?;
+            """, (kundennummer,))
+            rmas = c.fetchall()
+
+        # Si no hay datos, devolvemos una lista vacía
+        if not rmas:
+            print(f"[DEBUG] No se encontraron datos para el cliente {kundennummer}.")
+            rmas = []
+
+        return render_template('client_dashboard.html', username=kundennummer, rmas=rmas)
+    except sqlite3.Error as e:
+        print(f"[ERROR] Error al consultar la vista `Client_View` para el cliente {kundennummer}: {e}")
+        return render_template('client_dashboard.html', username=kundennummer, rmas=[], error_message="Fehler bei der Datenbankabfrage.")
+

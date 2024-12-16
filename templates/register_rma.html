@@ -11,36 +11,38 @@
 
     <!-- Mensaje informativo para el cliente -->
     <p style="text-align: justify; margin-bottom: 20px; width: 30%;" class="center">
-        ⚠️ <strong>WICHTIG.</strong> Liebe kunden: diesem Formular erstellen Sie eine <strong>neue</strong> Reparaturanfrage (RMA). Falls Ihr Produkt nicht unter Garantie steht, 
+        ⚠️ <strong>WICHTIG.</strong> Liebe Kunden: Mit diesem Formular erstellen Sie eine <strong>neue</strong> Reparaturanfrage (RMA). Falls Ihr Produkt nicht unter Garantie steht, 
         keine Sorge, TOA wird Ihr Produkt prüfen und reparieren. Nach Bestätigung Ihrer Anfrage wird Ihnen ein Link für die Online-Zahlung einer Grundgebühr bereitgestellt, 
         die die vorläufigen Kosten für die Überprüfung des Produkts abdeckt. Dieser Betrag wird zusätzlich von den Gesamtreparaturkosten abgezogen. 
         Sollte eine zusätzliche Zahlung erforderlich sein, wird unser Team Sie entsprechend informieren.
-
     </p>
 
     <!-- Formulario para la solicitud -->
     <form action="{{ routes_map['client_register_rma']() }}" method="POST" class="rma-form">
         {% for field in fields %}
             {% if field.type == 'textarea' %}
-                <textarea name="{{ field.name }}" placeholder="{{ field.placeholder }}" rows="5" {% if field.required %}required{% endif %}></textarea><br>
+                <textarea name="{{ field.name }}" placeholder="{{ field.placeholder }}" rows="5" 
+                          class="form-input" {% if field.required %}required{% endif %}></textarea><br>
             {% elif field.type == 'select' %}
-                <select name="{{ field.name }}" {% if field.required %}required{% endif %}>
+                <select name="{{ field.name }}" class="form-select" {% if field.required %}required{% endif %}>
                     {% for option in field.options %}
                         <option value="{{ option }}">{{ option }}</option>
                     {% endfor %}
                 </select><br>
             {% else %}
-                <input type="{{ field.type }}" name="{{ field.name }}" placeholder="{{ field.placeholder }}" {% if field.required %}required{% endif %}
-                       {% if field.step %}step="{{ field.step }}"{% endif %}><br>
+                <input type="{{ field.type }}" name="{{ field.name }}" placeholder="{{ field.placeholder }}" 
+                       class="form-input" {% if field.required %}required{% endif %}
+                       {% if field.step %}step="{{ field.step }}"{% endif %}
+                       {% if field.pattern %}pattern="{{ field.pattern }}"{% endif %}><br>
             {% endif %}
         {% endfor %}
-        <button type="submit">Absenden</button>
+        <button type="submit" class="form-button">Absenden</button>
     </form>
 
-    <!-- Botón para volver al inicio -->
+    <!-- Botón para volver al Dashboard -->
     <div style="margin-top: 20px; text-align: center;">
-        <a href="{{ routes_map['shared_index']() }}">
-            <button type="button" class="form-button">Zurück zum Hauptmenü</button>
+        <a href="{{ routes_map['client_dashboard']() }}">
+            <button type="button" class="form-button">Zurück zum Dashboard</button>
         </a>
     </div>
 </body>

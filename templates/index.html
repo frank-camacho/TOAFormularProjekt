@@ -5,64 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TOA Reparaturportal</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='menu.js') }}"></script>
 </head>
 <body>
     <h1>Willkommen zum TOA Reparaturportal</h1>
-
-    {% if session_active %}
-    <!-- Aviso de Sesión Activa -->
-    <div id="session-notice" style="margin-top: 20px; width: 30%;" class="center">
-        <h2>Hallo, {{ username }}!</h2>
-        <p>Ihre Sitzung ist aktiv. Möchten Sie fortfahren oder sich abmelden?</p>
-        <a href="{{ routes_map['employee_dashboard']() }}">
-            <button type="button" class="form-button">Zum Dashboard</button>
-        </a>
-        <a href="{{ routes_map['shared_logout']() }}">
-            <button type="button" class="form-button">Abmelden</button>
-        </a>
+    <!-- Contenedor dinámico para estado de sesión -->
+    <div id="session-status">
+        <!-- Este contenedor será actualizado dinámicamente por JavaScript -->
+        <p>Inhalte werden geladen...</p>
     </div>
-    {% else %}
-    <!-- Opciones para Clientes -->
-    <div id="cliente-menu" style="margin-top: 20px; width: 20%;" class="center">
-        <table class="center">
-            <tr>
-                <th>
-                    <a href="{{ routes_map['client_register_rma']() }}">
-                        <button type="button" class="form-button">Neue Reparaturanfrage Registrieren (RMA)</button>
-                    </a>
-                </th>
-            </tr>
-            <tr>
-                <th>
-                    <a href="{{ routes_map['client_consulta']() }}">
-                        <button type="button" class="form-button">Reparaturstatus Abrufen</button>
-                    </a>
-                </th>
-            </tr>
-        </table>
-    </div>
-
-    <!-- Formulario de Inicio de Sesión para Empleados -->
-    <div id="mitarbeiter-login" style="margin-top: 40px; width: 20%;" class="center">
-        <h2>Mitarbeiter-Login</h2>
-        <form action="{{ routes_map['shared_login']() }}" method="POST" class="rma-form">
-            <div class="form-group">
-                <input type="text" name="username" placeholder="Benutzername" required class="form-input">
-            </div>
-            <div class="form-group">
-                <input type="password" name="password" placeholder="Passwort" required class="form-input">
-            </div>
-            <button type="submit" class="form-button" style="text-align: center; width: 50%;">Anmelden</button>
-        </form>
-    </div>
-    {% endif %}
-
-    <!-- Mensajes de error -->
-    {% if error_message %}
-        <div class="error-message" style="color: red; text-align: center; margin-top: 10px;">
-            {{ error_message }}
-        </div>
-    {% endif %}
 </body>
 </html>

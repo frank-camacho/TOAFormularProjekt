@@ -6,15 +6,16 @@ routes_map = {
     'shared_login': lambda: url_for('shared.login'),
     'shared_logout': lambda: url_for('shared.logout'),
 
+    # Rutas de Clientes
+    'client_dashboard': lambda: url_for('client.client_dashboard'),  # Actualizado al blueprint `client`
+    'client_consulta': lambda: url_for('client.consulta'),
+    'client_register_rma': lambda: url_for('client.register_rma'),
+
     # Rutas de Administración
     'admin_manage_employees': lambda: url_for('admin.manage_employees'),
     'admin_add_employee': lambda: url_for('admin.add_employee'),
     'admin_edit_employee': lambda employee_id: url_for('admin.edit_employee', employee_id=employee_id),
     'admin_delete_employee': lambda employee_id: url_for('admin.delete_employee', employee_id=employee_id),
-
-    # Rutas de Clientes
-    'client_consulta': lambda: url_for('client.consulta'),
-    'client_register_rma': lambda: url_for('client.register_rma'),
 
     # Rutas de Empleados
     'employee_dashboard': lambda: url_for('employee.employee_dashboard'),
@@ -23,7 +24,7 @@ routes_map = {
     'employee_update_status': lambda: url_for('employee.update_status'),
     'employee_generate_report': lambda: url_for('employee.generate_report'),
     'employee_create_report': lambda rma_id: url_for('employee.create_report', rma_id=rma_id),
-    'employee_view_reports': lambda rma_id: url_for('employee.view_reports', rma_id=rma_id),  # Cambiado nombre clave
+    'employee_view_reports': lambda rma_id: url_for('employee.view_reports', rma_id=rma_id),
 
     # Rutas de RMA
     'rma_submit_rma': lambda: url_for('rma.submit_rma'),

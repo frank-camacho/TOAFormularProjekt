@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kundendashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table_controls.css') }}">
+    <script type="module" src="{{ url_for('static', filename='client_dashboard.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='table_controls.js') }}"></script>
+</head>
+<body>
+    <header>
+        <h1>Kundendashboard</h1>
+        <div id="client-info">
+            <h2>Willkommen, {{ current_user.username }}</h2>
+            <!-- Botón para registrar RMA -->
+            <a href="{{ routes_map['client_register_rma']() }}">
+                <button type="button" class="form-button">Neue Reparaturanfrage</button>
+            </a>
+        </div>
+    </header>
+    <main>
+        <div id="rma-list">
+            <h3>Ihre Reparaturaufträge</h3>
+            <div class="table-container">
+                <input type="text" id="table-filter" placeholder="🔍 Suchen..." class="table-filter-input">
+                <table id="rma-table" class="table">
+                    <thead>
+                        <tr>
+                            <th>RMA-ID</th>
+                            <th>Projektreferenz</th>
+                            <th>Modell</th>
+                            <th>Seriennummer</th>
+                            <th>Status</th>
+                            <th>Registrierungsdatum</th>
+                            <th>Letzte Werkstattaktualisierung</th>
+                            <th>Materialstatus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if rmas %}
+                            {% for rma in rmas %}
+                            <tr>
+                                <td>{{ rma.RMA_ID }}</td>
+                                <td>{{ rma.Project_Reference }}</td>
+                                <td>{{ rma.Model }}</td>
+                                <td>{{ rma.Serial_Number }}</td>
+                                <td>{{ rma.Status }}</td>
+                                <td>{{ rma.Registration_Date }}</td>
+                                <td>{{ rma.Last_Workshop_Update }}</td>
+                                <td>{{ rma.Material_Availability_Status }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="8">Keine Daten verfügbar</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <!-- Botón de Logout -->
+    {% if current_user %}
+    <div class="logout-button" style="text-align: center;">
+        <a href="{{ routes_map['shared_logout']() }}">
+            <button type="button" style="text-align: center;">Abmelden</button>
+        </a>
+    </div>
+    {% endif %}    
+</body>
+</html>

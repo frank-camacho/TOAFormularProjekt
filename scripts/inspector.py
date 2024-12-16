@@ -1,46 +1,39 @@
-import sqlite3
 import os
-from datetime import datetime
+import sys
 
-# Ruta de la base de datos
-DB_PATH = os.path.join(os.path.dirname(__file__), '../rma.db')
+# Añadir el directorio raíz del proyecto al sys.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
 
-def add_timestamp_column():
-    try:
-        # Conectar a la base de datos
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
+from utils.db_utils import execute_query  # Ahora funcionará correctamente
 
-        # Verificar si la columna 'timestamp' existe
-        c.execute("PRAGMA table_info(rma_requests)")
-        columns = [row[1] for row in c.fetchall()]
-        
-        if 'timestamp' in columns:
-            print("✅ La columna 'timestamp' ya existe.")
-        else:
-            # Agregar la columna 'timestamp' sin valor predeterminado
-            c.execute("ALTER TABLE rma_requests ADD COLUMN timestamp DATETIME")
-            conn.commit()
-            print("✅ Columna 'timestamp' agregada correctamente.")
+# Verificar si el rol `client` funciona
+def test_client_access():
+    # Ruta a la base de datos relativa a inspector.py
+    db_path = os.path.join(os.path.dirname(__file__), "../users.db")
 
-            # Poblar la columna 'timestamp' para registros existentes
-            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            c.execute("UPDATE rma_requests SET timestamp = ? WHERE timestamp IS NULL", (current_time,))
-            conn.commit()
-            print("✅ Valores de 'timestamp' inicializados para registros existentes.")
-        
-        # Validar los cambios
-        c.execute("SELECT id, modell, name, status, assigned_taller, timestamp FROM rma_requests LIMIT 5")
-        rows = c.fetchall()
-        print("Muestra de registros actualizados:")
-        for row in rows:
-            print(row)
+    # Probar inserción de cliente
+    execute_query(
+        "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+        params=("test_client", "test_password", "client"),
+        fetch_all=False,
+        db_type="users"
+    )
 
-    except sqlite3.Error as e:
-        print(f"❌ Error al actualizar la base de datos: {e}")
-    finally:
-        if conn:
-            conn.close()
+    # Comprobar que el cliente existe
+    result = execute_query(
+        "SELECT username, role FROM users WHERE username = ?",
+        params=("test_client",),
+        db_type="users"
+    )
+    print(f"Resultados para el usuario creado: {result}")
+
+    # Limpiar datos después de la prueba
+    execute_query(
+        "DELETE FROM users WHERE username = ?",
+        params=("test_client",),
+        fetch_all=False,
+        db_type="users"
+    )
 
 if __name__ == "__main__":
-    add_timestamp_column()
+    test_client_access()
