@@ -1,15 +1,14 @@
 EMPLOYEE_FIELDS = [
-    {"name": "kundennummer", "type": "text", "placeholder": "Kundennummer", "required": True},
-    {"name": "product", "type": "text", "placeholder": "Produktname", "required": True},
-    {"name": "serial_number", "type": "text", "placeholder": "Seriennummer", "required": True},
-    {"name": "customer", "type": "text", "placeholder": "Kundenname", "required": True},
-    {"name": "adresse", "type": "text", "placeholder": "Adresse", "required": True},
-    {"name": "plz", "type": "text", "placeholder": "Postleitzahl", "required": True},
-    {"name": "telefon", "type": "text", "placeholder": "Telefonnummer", "required": True},
-    {"name": "email", "type": "email", "placeholder": "E-Mail-Adresse", "required": True},
-    {"name": "anmeldedatum", "type": "date", "placeholder": "Anmeldedatum", "required": True},
-    {"name": "issue_description", "type": "textarea", "placeholder": "Problembeschreibung", "required": True},
-    {"name": "repair_cost", "type": "number", "placeholder": "Reparaturkosten (€)", "step": "0.01", "required": False},
-    {"name": "status", "type": "select", "options": ["Neu", "In Arbeit", "Abgeschlossen"], "placeholder": "Status", "required": True},
-    {"name": "assigned_taller", "type": "text", "placeholder": "Zugewiesener Werkstatt", "required": False}
+    {"name": "kundennummer", "label": "Kundennummer", "type": "text", "required": True},
+    {"name": "artikel", "label": "Artikel", "type": "text", "required": True},
+    {"name": "modell", "label": "Modell", "type": "text", "required": True},  # NUEVO CAMPO
+    {"name": "seriennummer", "label": "Seriennummer", "type": "text", "required": True},
+    {"name": "fehlerangabe_kunde", "label": "Fehlerbeschreibung Kunde", "type": "textarea", "required": True},
+    {"name": "vergeben_am", "label": "Vergeben am", "type": "date", "required": False},  # NUEVO CAMPO
+    {"name": "trackingnummer", "label": "Trackingnummer", "type": "text", "required": False},
+    {"name": "abgeschlossen_am", "label": "Abgeschlossen am", "type": "date", "required": False},
+    {"name": "reparaturmassnahme", "label": "Reparaturmaßnahme", "type": "textarea", "required": True},
+    {"name": "e_teile_nummer", "label": "E-Teile Nummer", "type": "text", "required": False},
+    {"name": "reparaturkosten", "label": "Reparaturkosten (€)", "type": "number", "step": "0.01", "required": False},  # NUEVO CAMPO
+    {"name": "kommentar", "label": "Kommentar", "type": "textarea", "required": False},
 ]

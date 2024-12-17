@@ -3,72 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kundendashboard</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='table_controls.css') }}">
-    <script type="module" src="{{ url_for('static', filename='client_dashboard.js') }}"></script>
-    <script type="module" src="{{ url_for('static', filename='table_controls.js') }}"></script>
+    <title>RMA Übersicht</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 </head>
 <body>
-    <header>
-        <h1>Kundendashboard</h1>
-        <div id="client-info">
-            <h2>Willkommen, {{ current_user.username }}</h2>
-            <!-- Botón para registrar RMA -->
-            <a href="{{ routes_map['client_register_rma']() }}">
-                <button type="button" class="form-button">Neue Reparaturanfrage</button>
-            </a>
-        </div>
-    </header>
-    <main>
-        <div id="rma-list">
-            <h3>Ihre Reparaturaufträge</h3>
-            <div class="table-container">
-                <input type="text" id="table-filter" placeholder="🔍 Suchen..." class="table-filter-input">
-                <table id="rma-table" class="table">
-                    <thead>
-                        <tr>
-                            <th>RMA-ID</th>
-                            <th>Projektreferenz</th>
-                            <th>Modell</th>
-                            <th>Seriennummer</th>
-                            <th>Status</th>
-                            <th>Registrierungsdatum</th>
-                            <th>Letzte Werkstattaktualisierung</th>
-                            <th>Materialstatus</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if rmas %}
-                            {% for rma in rmas %}
-                            <tr>
-                                <td>{{ rma.RMA_ID }}</td>
-                                <td>{{ rma.Project_Reference }}</td>
-                                <td>{{ rma.Model }}</td>
-                                <td>{{ rma.Serial_Number }}</td>
-                                <td>{{ rma.Status }}</td>
-                                <td>{{ rma.Registration_Date }}</td>
-                                <td>{{ rma.Last_Workshop_Update }}</td>
-                                <td>{{ rma.Material_Availability_Status }}</td>
-                            </tr>
-                            {% endfor %}
-                        {% else %}
-                            <tr>
-                                <td colspan="8">Keine Daten verfügbar</td>
-                            </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
-    <!-- Botón de Logout -->
-    {% if current_user %}
-    <div class="logout-button" style="text-align: center;">
-        <a href="{{ routes_map['shared_logout']() }}">
-            <button type="button" style="text-align: center;">Abmelden</button>
+    <h1 style="text-align: center;">Ihre RMA-Anfragen</h1>
+
+    <!-- Botón para agregar un neues RMA -->
+    <div style="text-align: center; margin: 20px;">
+        <a href="{{ url_for('client.register_rma') }}">
+            <button type="button" style="padding: 10px 20px;">➕ Neues RMA erstellen</button>
         </a>
     </div>
-    {% endif %}    
+
+    <!-- Tabla de registros RMA -->
+    <table id="rmaTable" style="width: 80%; margin: 0 auto; border-collapse: collapse; text-align: center;" border="1">
+        <thead>
+            <tr>
+                <th>RMA ID</th> <!-- Cabecera para el ID -->
+                {% for label in column_labels[1:] %} <!-- Ignorar la primera etiqueta (ID) -->
+                    <th>{{ label }}</th>
+                {% endfor %}
+                <th>Reparaturhistorie</th> <!-- Columna especial -->
+            </tr>
+        </thead>
+        <tbody>
+            {% if rmas %}
+                {% for rma in rmas %}
+                <tr>
+                    <td>{{ rma[0] }}</td> <!-- Mostrar el ID -->
+                    {% for value in rma[1:] %}
+                        <td>{{ value }}</td> <!-- Mostrar las columnas restantes -->
+                    {% endfor %}
+                    <td>
+                        <button type="button" class="history-button" data-id="{{ rma[0] }}">🔍 Historie anzeigen</button>
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="{{ column_labels|length + 1 }}">Keine Daten verfügbar</td>
+                </tr>
+            {% endif %}
+        </tbody>                           
+    </table>
+
+    <!-- Script para filtros -->
+    <script>
+        $(document).ready( function () {
+            $('#rmaTable').DataTable();
+        });
+    </script>
+
+    <!-- Pop-up Modal -->
+    <div id="history-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
+        <div style="background:white; width:50%; margin:10% auto; padding:20px; border-radius:5px;">
+            <h3>Reparaturhistorie</h3>
+            <table id="history-table" border="1" style="width:100%; text-align:center;">
+                <thead>
+                    <tr>
+                        <th>RMA ID</th>
+                        <th>Techniker</th>
+                        <th>Status</th>
+                        <th>Teile verwendet</th>
+                        <th>Dauer (Stunden)</th>
+                        <th>Nächste Schritte</th>
+                        <th>ZOR</th>
+                        <th>Lieferscheinnummer</th>
+                        <th>Kommentare</th>
+                        <th>Kosten (€)</th>
+                        <th>Erstellt am</th>
+                    </tr>
+                </thead>                            
+                <tbody></tbody>
+            </table>
+            <button id="close-modal" style="margin-top:15px;">Schließen</button>
+        </div>
+    </div>
+
+    <!-- Enlazar el archivo JavaScript -->
+    <script src="{{ url_for('static', filename='client_dashboard.js') }}"></script>
+
+    <!-- Botón de Logout -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('shared.logout') }}">
+            <button type="button">Abmelden</button>
+        </a>
+    </div>
 </body>
 </html>

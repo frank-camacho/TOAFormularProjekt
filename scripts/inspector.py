@@ -1,39 +1,38 @@
+import sqlite3
 import os
-import sys
+from datetime import datetime
 
-# Añadir el directorio raíz del proyecto al sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../")))
+def get_workshop_db_path():
+    return os.path.join(os.path.dirname(__file__), "../workshop_reports.db")
 
-from utils.db_utils import execute_query  # Ahora funcionará correctamente
+def seed_extended_workshop_data():
+    """Inserta datos de prueba en la tabla 'workshop_reports'."""
+    db_path = get_workshop_db_path()
+    try:
+        conn = sqlite3.connect(db_path)
+        c = conn.cursor()
 
-# Verificar si el rol `client` funciona
-def test_client_access():
-    # Ruta a la base de datos relativa a inspector.py
-    db_path = os.path.join(os.path.dirname(__file__), "../users.db")
+        # Datos de prueba para workshop_reports
+        seed_data = [
+            (12, "Techniker A", "In Arbeit", "Teil A, Teil B", 3.5, "Weitere Tests notwendig", "ZOR12345", "LS987654", "Reparatur begonnen", 100.0, datetime.now().strftime("%Y-%m-%d")),
+            (12, "Techniker B", "Abgeschlossen", "Teil C", 5.0, "Reparatur abgeschlossen", "ZOR54321", "LS123456", "Endprüfung erfolgreich", 200.0, datetime.now().strftime("%Y-%m-%d")),
+            (13, "Techniker C", "Wartend", "Teil D", 2.0, "Auf Ersatzteile warten", "ZOR67890", "LS567890", "Warten auf Material", 50.0, datetime.now().strftime("%Y-%m-%d"))
+        ]
 
-    # Probar inserción de cliente
-    execute_query(
-        "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
-        params=("test_client", "test_password", "client"),
-        fetch_all=False,
-        db_type="users"
-    )
+        # Insertar datos en la tabla
+        c.executemany("""
+            INSERT INTO workshop_reports (
+                rma_id, technician_name, repair_status, used_parts, duration, next_steps, ZOR, Lieferscheinnummer, 
+                comments, cost, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, seed_data)
+        conn.commit()
+        print("[SUCCESS] Datos extendidos de prueba insertados en 'workshop_reports'.")
 
-    # Comprobar que el cliente existe
-    result = execute_query(
-        "SELECT username, role FROM users WHERE username = ?",
-        params=("test_client",),
-        db_type="users"
-    )
-    print(f"Resultados para el usuario creado: {result}")
-
-    # Limpiar datos después de la prueba
-    execute_query(
-        "DELETE FROM users WHERE username = ?",
-        params=("test_client",),
-        fetch_all=False,
-        db_type="users"
-    )
+    except sqlite3.Error as e:
+        print(f"[ERROR] Error al insertar datos de prueba: {e}")
+    finally:
+        conn.close()
 
 if __name__ == "__main__":
-    test_client_access()
+    seed_extended_workshop_data()

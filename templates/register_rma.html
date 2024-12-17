@@ -3,46 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RMA-Anmeldung</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <title>RMA Registrierung</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>RMA-Anmeldung für Reparatur</h1>
-
-    <!-- Mensaje informativo para el cliente -->
-    <p style="text-align: justify; margin-bottom: 20px; width: 30%;" class="center">
-        ⚠️ <strong>WICHTIG.</strong> Liebe Kunden: Mit diesem Formular erstellen Sie eine <strong>neue</strong> Reparaturanfrage (RMA). Falls Ihr Produkt nicht unter Garantie steht, 
-        keine Sorge, TOA wird Ihr Produkt prüfen und reparieren. Nach Bestätigung Ihrer Anfrage wird Ihnen ein Link für die Online-Zahlung einer Grundgebühr bereitgestellt, 
-        die die vorläufigen Kosten für die Überprüfung des Produkts abdeckt. Dieser Betrag wird zusätzlich von den Gesamtreparaturkosten abgezogen. 
-        Sollte eine zusätzliche Zahlung erforderlich sein, wird unser Team Sie entsprechend informieren.
-    </p>
-
-    <!-- Formulario para la solicitud -->
-    <form action="{{ routes_map['client_register_rma']() }}" method="POST" class="rma-form">
+    <h1 style="text-align: center;">RMA Registrierung</h1>
+    <form method="POST" action="{{ url_for('client.register_rma') }}" style="max-width: 600px; margin: auto;">
+        <!-- Renderizar los campos dinámicamente -->
         {% for field in fields %}
-            {% if field.type == 'textarea' %}
-                <textarea name="{{ field.name }}" placeholder="{{ field.placeholder }}" rows="5" 
-                          class="form-input" {% if field.required %}required{% endif %}></textarea><br>
-            {% elif field.type == 'select' %}
-                <select name="{{ field.name }}" class="form-select" {% if field.required %}required{% endif %}>
-                    {% for option in field.options %}
-                        <option value="{{ option }}">{{ option }}</option>
-                    {% endfor %}
-                </select><br>
-            {% else %}
-                <input type="{{ field.type }}" name="{{ field.name }}" placeholder="{{ field.placeholder }}" 
-                       class="form-input" {% if field.required %}required{% endif %}
-                       {% if field.step %}step="{{ field.step }}"{% endif %}
-                       {% if field.pattern %}pattern="{{ field.pattern }}"{% endif %}><br>
-            {% endif %}
+            <div style="margin-bottom: 15px;">
+                {% if field.type == 'textarea' %}
+                    <textarea name="{{ field.name }}" id="{{ field.name }}" placeholder="{{ field.name }}" rows="4" style="width: 100%;" 
+                        {% if field.required %}required{% endif %}></textarea>
+                {% else %}
+                    <input type="{{ field.type }}" name="{{ field.name }}" id="{{ field.name }}" placeholder="{{ field.name }}" style="width: 100%;" 
+                        {% if field.required %}required{% endif %}>
+                {% endif %}
+            </div>
         {% endfor %}
-        <button type="submit" class="form-button">Absenden</button>
+
+        <button type="submit" style="display: block; margin: auto; padding: 10px 20px;">Absenden</button>
     </form>
 
-    <!-- Botón para volver al Dashboard -->
-    <div style="margin-top: 20px; text-align: center;">
-        <a href="{{ routes_map['client_dashboard']() }}">
-            <button type="button" class="form-button">Zurück zum Dashboard</button>
+    <!-- Botón para volver a la página principal -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('shared.index') }}">
+            <button type="button">Zurück zur Startseite</button>
         </a>
     </div>
 </body>
