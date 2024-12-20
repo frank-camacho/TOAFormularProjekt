@@ -20,18 +20,34 @@ def register_rma():
             # Recibir datos del formulario solo para los campos permitidos a los clientes
             data = {field['name']: request.form.get(field['name'], '') for field in CLIENT_FIELDS}
 
+            # Validar que los campos obligatorios no estén vacíos
+            required_fields = ['kundennummer', 'name', 'adresse', 'plz', 'telefon', 'email', 'anmeldedatum',
+                               'artikel', 'modell', 'seriennummer', 'fehlbeschreibung']
+            for field in required_fields:
+                if not data.get(field):
+                    return render_template(
+                        'register_rma.html',
+                        fields=CLIENT_FIELDS,
+                        error_message=f"Das Feld '{field}' ist erforderlich."
+                    )
+
             # Insertar datos en la tabla rma_requests con valores predeterminados
             c.execute('''
                 INSERT INTO rma_requests (
                     kundennummer, name, adresse, plz, telefon, email, anmeldedatum,
-                    artikel, seriennummer, fehlbeschreibung, kommentar, status
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    artikel, modell, seriennummer, fehlbeschreibung, kommentar, reparaturkosten, status
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 data['kundennummer'], data['name'], data['adresse'], data['plz'], data['telefon'],
-                data['email'], data['anmeldedatum'], data['artikel'], data['seriennummer'],
-                data['fehlbeschreibung'], data.get('kommentar', ''), "Neu"
+                data['email'], data['anmeldedatum'], data['artikel'], data['modell'], data['seriennummer'],
+                data['fehlbeschreibung'], data.get('kommentar', ''), 0.0, "Neu"
             ))
             conn.commit()
+
+            # Validar los datos insertados
+            c.execute("SELECT * FROM rma_requests")
+            results = c.fetchall()
+            print(f"[DEBUG] Datos en rma_requests: {results}")
 
             # Redirigir con un mensaje de éxito
             return render_template('confirmation.html', message="Ihre Reparaturanfrage wurde erfolgreich registriert!")
@@ -91,16 +107,18 @@ def client_dashboard():
             c = conn.cursor()
 
             # Seleccionar columnas relevantes + 'id'
-            column_names = ['id'] + [field['name'] for field in CLIENT_FIELDS]  # Agregamos 'id' al inicio
-            column_labels = ['RMA ID'] + [field['label'] for field in CLIENT_FIELDS]  # Etiqueta para ID
+            column_names = ['id'] + [field['name'] for field in CLIENT_FIELDS]
+            column_labels = ['RMA ID'] + [field['label'] for field in CLIENT_FIELDS]
 
             query = f"""
                 SELECT {', '.join(column_names)}
                 FROM rma_requests
                 WHERE kundennummer = ?;
             """
+            print(f"[DEBUG] Query ejecutada: {query}")
             c.execute(query, (kundennummer,))
             rmas = c.fetchall()
+            print(f"[DEBUG] RMAs obtenidos para {kundennummer}: {rmas}")
 
         return render_template('client_dashboard.html', column_labels=column_labels, rmas=rmas)
 
