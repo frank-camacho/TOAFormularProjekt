@@ -15,12 +15,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1 class="text-center">Willkommen im Mitarbeiter-Portal</h1>
+    <h1 class="text-center">Willkommen im Mitarbeiter-Portal {{ username }}</h1>
     
     <!-- Aviso de sesión activa -->
     {% if session_active %}
     <div class="session-alert">
-        <p>👋 Willkommen, {{ username }}! Ihre Sitzung ist aktiv.</p>
+        <p>👋 Willkommen,<span style="color: blue; font-weight: bold;">{{ username }}</span>! Ihre Sitzung ist aktiv.</p>
     </div>
     {% endif %}
     

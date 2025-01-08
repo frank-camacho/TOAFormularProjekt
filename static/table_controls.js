@@ -38,7 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * Configurar paginación manual para tablas simples.
      */
-    paginateSimpleTable('simpleTable', 10);
+    const table = document.getElementById('simpleTable');
+    if (table) {
+        paginateSimpleTable('simpleTable', 10);
+    } else {
+        console.warn('⚠️ Tabla con ID "simpleTable" no encontrada para la paginación.');
+    }
 
     /**
      * Debugging logs para verificar el estado inicial.

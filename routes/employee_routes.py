@@ -21,6 +21,10 @@ def employee_required():
 @employee_bp.route('/dashboard', methods=['GET'])
 def employee_dashboard():
     try:
+        # Verificar sesión y cargar datos
+        session_active = 'user_id' in session
+        username = g.current_user['username'] if session_active else None
+
         # Conexión a la base de datos
         conn = sqlite3.connect(get_db_path())
         conn.row_factory = sqlite3.Row  # Permitir acceso a columnas por nombre
@@ -55,11 +59,16 @@ def employee_dashboard():
         """)
         rmas = [dict(row) for row in c.fetchall()]
 
-        return render_template('employee_dashboard.html', requests=requests, stats=stats, rmas=rmas)
-
+        return render_template(
+            'employee_dashboard.html',
+            session_active=session_active,
+            username=username,
+            requests=requests,
+            stats=stats,
+            rmas=rmas
+        )
     except sqlite3.Error as e:
         return f"Error al acceder a la base de datos: {e}", 500
-
     finally:
         if 'conn' in locals():
             conn.close()
