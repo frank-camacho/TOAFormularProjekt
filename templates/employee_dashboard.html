@@ -23,6 +23,21 @@
         <p>👋 Willkommen,<span style="color: blue; font-weight: bold;">{{ username }}</span>! Ihre Sitzung ist aktiv.</p>
     </div>
     {% endif %}
+
+    <!-- Botón para abrir el menú -->
+    <div class="menu-container">
+        <button id="menu-toggle" class="menu-button">
+            ☰ <!-- Icono de tres líneas -->
+        </button>
+        <!-- Menú desplegable -->
+        <div id="dropdown-menu" class="menu-dropdown hidden">
+            <ul>
+                <li><button type="button" onclick="alert('Funktion noch nicht verfügbar.')">⚙️ Einstellungen</button></li>
+                <li><button type="button" onclick="showTab('tab-summary')">Zusammenfassung</button></li>
+                <li><button type="button" onclick="showTab('tab-rma-list')">Alle RMAs</button></li>
+            </ul>
+        </div>
+    </div>
     
     <!-- Pestañas -->
     <div class="tabs">
